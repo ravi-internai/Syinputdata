@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>FG Inventory – Input Sheet</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+:root {
+  --pink:#e91e8c; --pink-light:#fce4f3;
+  --gold:#f4a435; --gold-light:#fff8ec;
+  --green:#2eb67d; --green-light:#e6f9f1;
+  --red:#e53935; --red-light:#fdecea;
+  --purple:#7b1fa2; --purple-light:#f3e5f5;
+  --goog:#34a853; --goog-light:#e8f5e9;
+  --dark:#1a1a2e; --text:#2d2d2d; --text2:#666; --text3:#999;
+  --border:#e8e8e8; --bg:#f8f5ff;
+  --shadow:0 2px 16px rgba(233,30,140,0.08);
+  --radius:16px; --radius-sm:10px;
+}
+body { font-family:'Nunito',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; padding-bottom:110px; }
+
+/* HEADER */
+.header { background:linear-gradient(135deg,#1a1a2e 0%,#2d1b69 60%,#e91e8c 100%); padding:16px 20px 20px; position:sticky; top:0; z-index:100; box-shadow:0 4px 20px rgba(233,30,140,0.25); }
+.header-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:4px; }
+.logo { display:flex; align-items:center; gap:10px; }
+.logo-icon { width:36px; height:36px; background:white; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; }
+.logo-text { font-family:'Poppins',sans-serif; color:white; font-weight:700; font-size:16px; line-height:1.1; }
+.logo-sub { font-size:10px; font-weight:400; opacity:0.75; }
+.header-date { background:rgba(255,255,255,0.15); border-radius:20px; padding:4px 12px; color:white; font-size:12px; font-weight:600; }
+.header-sub { color:rgba(255,255,255,0.65); font-size:10px; letter-spacing:0.5px; text-transform:uppercase; display:flex; align-items:center; justify-content:space-between; }
+.sync-badge { font-size:10px; font-weight:700; padding:2px 10px; border-radius:10px; }
+.sync-badge.connected { background:rgba(52,168,83,0.25); color:#a8f0c0; }
+.sync-badge.disconnected { background:rgba(255,255,255,0.1); color:rgba(255,255,255,0.5); }
+.sync-badge.syncing { background:rgba(244,164,53,0.25); color:#ffe0a0; }
+
+/* STATS */
+.stats-bar { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin:12px 16px 0; }
+.stat-card { background:white; border-radius:12px; padding:12px; text-align:center; box-shadow:0 2px 8px rgba(0,0,0,0.05); }
+.stat-val { font-family:'Poppins',sans-serif; font-size:20px; font-weight:700; color:var(--dark); line-height:1; }
+.stat-lbl { font-size:10px; font-weight:700; color:var(--text3); text-transform:uppercase; letter-spacing:0.4px; margin-top:3px; }
+
+/* FORM CARD */
+.form-card { background:white; border-radius:var(--radius); margin:14px 16px; padding:20px; box-shadow:var(--shadow); border:1.5px solid #f0e8fa; }
+.form-title { font-family:'Poppins',sans-serif; font-size:15px; font-weight:700; color:var(--dark); margin-bottom:16px; display:flex; align-items:center; gap:8px; }
+.form-title-dot { width:8px; height:8px; border-radius:50%; background:var(--pink); }
+
+/* FIELD */
+.field { margin-bottom:14px; }
+.field label { display:block; font-size:12px; font-weight:700; color:var(--text2); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px; }
+.field input, .field select { width:100%; padding:12px 14px; border:1.5px solid var(--border); border-radius:var(--radius-sm); font-family:'Nunito',sans-serif; font-size:14px; font-weight:600; color:var(--text); background:#fafafa; outline:none; transition:all 0.2s; -webkit-appearance:none; appearance:none; }
+.field input:focus { border-color:var(--pink); background:white; box-shadow:0 0 0 3px rgba(233,30,140,0.08); }
+.field input[readonly] { background:#f8f5ff; color:var(--purple); font-weight:700; border-color:#e0d0f5; }
+.auto-badge { font-size:10px; background:var(--purple-light); color:var(--purple); padding:2px 8px; border-radius:10px; font-weight:700; margin-left:6px; }
+
+/* EAN ROW */
+.ean-input-wrap { display:flex; gap:8px; }
+.ean-input-wrap input { flex:1; }
+.scan-btn { flex-shrink:0; width:48px; height:48px; background:linear-gradient(135deg,#e91e8c,#f4a435); border:none; border-radius:var(--radius-sm); display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:22px; box-shadow:0 3px 12px rgba(233,30,140,0.35); transition:all 0.18s; }
+.scan-btn:active { transform:scale(0.95); }
+
+/* SKU DISPLAY */
+.sku-display { padding:12px 14px; border-radius:var(--radius-sm); background:var(--green-light); border:1.5px solid #b2dfdb; font-size:14px; font-weight:700; color:var(--green); min-height:44px; display:flex; align-items:center; }
+.sku-display.empty { background:#fafafa; border-color:var(--border); color:var(--text3); font-weight:500; font-size:13px; }
+.sku-display.not-found { color:var(--red); background:var(--red-light); border-color:#ffcdd2; }
+
+/* PLATFORM */
+.platform-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-top:6px; }
+.platform-btn { padding:10px 6px; border-radius:var(--radius-sm); border:2px solid transparent; cursor:pointer; font-family:'Nunito',sans-serif; font-size:11px; font-weight:800; text-align:center; transition:all 0.18s; display:flex; flex-direction:column; align-items:center; gap:4px; }
+.platform-btn .pi { font-size:16px; }
+.platform-btn.selected { transform:scale(1.05); box-shadow:0 4px 14px rgba(0,0,0,0.15); }
+.p-swiggy { background:#fff0f0; color:#c62828; border-color:#ffcdd2; }
+.p-swiggy.selected { background:#c62828; color:white; border-color:#c62828; }
+.p-fba { background:#e3f2fd; color:#1565c0; border-color:#90caf9; }
+.p-fba.selected { background:#1565c0; color:white; }
+.p-zepto { background:#e8f5e9; color:#2e7d32; border-color:#a5d6a7; }
+.p-zepto.selected { background:#2e7d32; color:white; }
+.p-myntra { background:#fffde7; color:#f57f17; border-color:#fff176; }
+.p-myntra.selected { background:#f57f17; color:white; }
+.p-fbf { background:#e3f2fd; color:#0277bd; border-color:#81d4fa; }
+.p-fbf.selected { background:#0277bd; color:white; }
+.p-blinkit { background:#f3e5f5; color:#6a1b9a; border-color:#ce93d8; }
+.p-blinkit.selected { background:#6a1b9a; color:white; }
+.p-gogear { background:#fbe9e7; color:#bf360c; border-color:#ffab91; }
+.p-gogear.selected { background:#bf360c; color:white; }
+
+/* TXN */
+.txn-toggle { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:6px; }
+.txn-btn { padding:12px; border-radius:var(--radius-sm); border:2px solid transparent; cursor:pointer; font-family:'Nunito',sans-serif; font-size:14px; font-weight:800; display:flex; align-items:center; justify-content:center; gap:6px; transition:all 0.18s; }
+.txn-in { background:var(--green-light); color:var(--green); border-color:#a5d6a7; }
+.txn-in.selected { background:var(--green); color:white; box-shadow:0 4px 14px rgba(46,182,125,0.3); }
+.txn-out { background:var(--red-light); color:var(--red); border-color:#ffcdd2; }
+.txn-out.selected { background:var(--red); color:white; box-shadow:0 4px 14px rgba(229,57,53,0.3); }
+
+/* QTY */
+.qty-row { display:flex; border:1.5px solid var(--border); border-radius:var(--radius-sm); overflow:hidden; background:#fafafa; }
+.qty-row.focused { border-color:var(--pink); background:white; box-shadow:0 0 0 3px rgba(233,30,140,0.08); }
+.qty-btn { width:48px; height:48px; background:none; border:none; font-size:22px; font-weight:700; color:var(--pink); cursor:pointer; display:flex; align-items:center; justify-content:center; }
+.qty-btn:active { background:var(--pink-light); }
+.qty-input { flex:1; text-align:center; border:none; background:transparent; font-family:'Poppins',sans-serif; font-size:20px; font-weight:700; color:var(--dark); outline:none; }
+
+/* SUBMIT */
+.submit-btn { width:100%; padding:16px; background:linear-gradient(135deg,#e91e8c,#f4a435); color:white; border:none; border-radius:var(--radius-sm); font-family:'Poppins',sans-serif; font-size:16px; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:0 4px 18px rgba(233,30,140,0.35); margin-top:20px; transition:all 0.2s; }
+.submit-btn:active { transform:scale(0.98); }
+.submit-btn:disabled { background:#ccc; box-shadow:none; cursor:not-allowed; }
+.sync-status-row { text-align:center; margin-top:10px; font-size:12px; font-weight:700; min-height:18px; }
+
+/* ENTRIES */
+.entries-header { display:flex; align-items:center; justify-content:space-between; padding:14px 16px 6px; }
+.entries-title { font-family:'Poppins',sans-serif; font-size:14px; font-weight:700; color:var(--dark); }
+.entries-count { background:var(--pink); color:white; font-size:12px; font-weight:700; padding:3px 10px; border-radius:20px; margin-left:6px; }
+.clear-btn { background:var(--red-light); color:var(--red); border:none; padding:6px 12px; border-radius:20px; font-size:12px; font-weight:700; cursor:pointer; }
+.entry-card { background:white; border-radius:12px; padding:14px; margin:0 16px 10px; box-shadow:0 2px 8px rgba(0,0,0,0.06); border:1.5px solid #f0e8fa; position:relative; }
+.entry-row1 { display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; }
+.entry-sku { font-size:13px; font-weight:700; color:var(--dark); flex:1; margin-right:8px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.entry-qty { font-family:'Poppins',sans-serif; font-size:16px; font-weight:700; }
+.entry-qty.in { color:var(--green); }
+.entry-qty.out { color:var(--red); }
+.entry-row2 { display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+.entry-ean { font-size:11px; color:var(--text3); font-weight:600; }
+.entry-final-ean { font-size:11px; color:var(--purple); font-weight:700; background:var(--purple-light); padding:2px 8px; border-radius:6px; }
+.entry-date { font-size:10px; color:var(--text3); margin-left:auto; }
+.plat-chip { font-size:10px; font-weight:800; padding:3px 9px; border-radius:8px; }
+.txn-chip { font-size:10px; font-weight:800; padding:3px 9px; border-radius:8px; }
+.txn-chip.in { background:var(--green-light); color:var(--green); }
+.txn-chip.out { background:var(--red-light); color:var(--red); }
+.del-entry { position:absolute; top:10px; right:10px; background:none; border:none; color:var(--text3); cursor:pointer; font-size:14px; padding:2px 4px; }
+.sync-dot { width:8px; height:8px; border-radius:50%; display:inline-block; margin-right:4px; }
+.sync-dot.ok { background:var(--green); }
+.sync-dot.pending { background:var(--gold); }
+.sync-dot.fail { background:var(--red); }
+
+.export-btn { display:flex; align-items:center; justify-content:center; gap:8px; width:calc(100% - 32px); margin:0 16px 14px; padding:13px; background:white; color:var(--pink); border:2px solid var(--pink); border-radius:var(--radius-sm); font-family:'Poppins',sans-serif; font-size:14px; font-weight:700; cursor:pointer; }
+
+/* PENDING BANNER */
+.pending-banner { display:none; margin:8px 16px; padding:12px 16px; background:#fff8ec; border:1.5px solid #ffe082; border-radius:12px; align-items:center; justify-content:space-between; gap:10px; }
+.pending-banner.show { display:flex; }
+.pending-text { font-size:13px; font-weight:700; color:#e65100; }
+.retry-btn { background:var(--gold); color:white; border:none; padding:7px 14px; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer; flex-shrink:0; }
+
+/* GOOGLE SETTINGS CARD */
+.goog-card { background:white; border-radius:var(--radius); margin:14px 16px; padding:20px; box-shadow:0 2px 12px rgba(52,168,83,0.1); border:1.5px solid #c8e6c9; }
+.goog-title { font-family:'Poppins',sans-serif; font-size:15px; font-weight:700; color:var(--dark); margin-bottom:14px; display:flex; align-items:center; gap:8px; }
+.steps-box { background:#f0faf4; border-radius:10px; padding:14px; margin-bottom:14px; font-size:12px; color:#2d6a4f; line-height:1.9; }
+.steps-box strong { color:#1b5e20; }
+.goog-input { width:100%; padding:11px 14px; border:1.5px solid #a5d6a7; border-radius:var(--radius-sm); font-family:'Nunito',sans-serif; font-size:13px; font-weight:600; outline:none; margin-bottom:10px; }
+.goog-input:focus { border-color:var(--goog); box-shadow:0 0 0 3px rgba(52,168,83,0.1); }
+.goog-btns { display:flex; gap:8px; }
+.btn-save-url { flex:1; padding:11px; background:var(--goog); color:white; border:none; border-radius:10px; font-family:'Poppins',sans-serif; font-size:13px; font-weight:700; cursor:pointer; }
+.btn-test-url { flex:1; padding:11px; background:white; color:var(--goog); border:2px solid var(--goog); border-radius:10px; font-family:'Poppins',sans-serif; font-size:13px; font-weight:700; cursor:pointer; }
+.conn-status { display:none; margin-top:12px; padding:10px 14px; border-radius:10px; font-size:13px; font-weight:700; text-align:center; }
+.conn-status.ok { background:var(--goog-light); color:#1b5e20; display:block; }
+.conn-status.fail { background:var(--red-light); color:var(--red); display:block; }
+.conn-status.testing { background:#fff8ec; color:#e65100; display:block; }
+.last-entry-box { display:none; margin-top:12px; background:#f8f5ff; border:1.5px solid #e0d0f5; border-radius:10px; padding:12px; }
+.last-entry-lbl { font-size:11px; font-weight:700; color:var(--text3); text-transform:uppercase; margin-bottom:6px; }
+.last-entry-val { font-size:13px; font-weight:600; color:var(--dark); }
+
+/* MASTER */
+/* SEARCH TAB */
+.search-box { display:flex; gap:8px; margin-bottom:14px; align-items:center; }
+.search-input { flex:1; padding:12px 16px; border:2px solid var(--border); border-radius:12px; font-size:15px; font-family:'Nunito',sans-serif; outline:none; transition:border .2s; }
+.search-input:focus { border-color:var(--pink); }
+.search-btn { background:var(--pink); color:white; border:none; border-radius:12px; padding:12px 18px; font-size:18px; cursor:pointer; }
+.sku-card { background:white; border-radius:14px; padding:14px 16px; margin-bottom:10px; box-shadow:0 2px 8px rgba(0,0,0,0.07); border-left:4px solid var(--pink); }
+.sku-card-name { font-size:15px; font-weight:700; color:var(--dark); margin-bottom:6px; }
+.sku-card-code { font-size:12px; color:var(--text2); font-family:monospace; margin-bottom:8px; }
+.sku-card-row { display:flex; gap:10px; flex-wrap:wrap; }
+.sku-badge { display:inline-flex; align-items:center; gap:4px; padding:5px 10px; border-radius:20px; font-size:12px; font-weight:700; }
+.sku-badge.balance { background:#e8f5e9; color:#2e7d32; }
+.sku-badge.location { background:#e3f2fd; color:#1565c0; }
+.search-empty { text-align:center; padding:40px 20px; color:var(--text2); font-size:14px; }
+.search-count { font-size:12px; color:var(--text2); margin-bottom:10px; text-align:right; }
+.master-header { display:none; }
+/* Master row — stacked card style for mobile */
+.master-row-wrap { background:#fafafa; border:1.5px solid var(--border); border-radius:12px; padding:12px 12px 12px 12px; padding-top:48px; margin-bottom:10px; position:relative; }
+.master-row-wrap:focus-within { border-color:var(--pink); background:white; }
+.master-row { display:flex; flex-direction:column; gap:8px; }
+.m-ean-wrap { position:relative; }
+.m-ean, .m-sku { width:100%; padding:10px 12px; border:1.5px solid var(--border); border-radius:8px; font-family:'Nunito',sans-serif; font-size:14px; font-weight:600; outline:none; box-sizing:border-box; background:white; }
+.m-ean { font-family:monospace; font-size:13px; color:var(--purple); border-color:#e0d0f5; background:#f8f5ff; padding-right:40px; }
+.m-sku { color:var(--dark); }
+.m-ean:focus, .m-sku:focus { border-color:var(--pink); box-shadow:0 0 0 3px rgba(233,30,140,0.08); }
+.m-ean-label { font-size:10px; font-weight:700; color:var(--text3); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px; display:block; }
+.m-sku-label { font-size:10px; font-weight:700; color:var(--text3); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px; display:block; }
+.del-master { position:absolute; top:0; left:0; right:0; width:100%; background:var(--red-light); border:none; border-bottom:1px solid #ffcdd2; color:var(--red); cursor:pointer; font-size:13px; font-weight:700; font-family:'Nunito',sans-serif; padding:10px 14px; border-radius:12px 12px 0 0; text-align:left; display:flex; align-items:center; justify-content:space-between; min-height:40px; }
+.add-master-btn { background:var(--pink-light); color:var(--pink); border:1.5px dashed var(--pink); border-radius:10px; padding:13px; width:100%; font-family:'Nunito',sans-serif; font-size:14px; font-weight:700; cursor:pointer; margin-top:4px; }
+.save-master-btn { width:100%; padding:13px; background:var(--pink); color:white; border:none; border-radius:var(--radius-sm); font-family:'Poppins',sans-serif; font-size:14px; font-weight:700; cursor:pointer; margin-top:10px; }
+
+/* NAV */
+.bottom-nav { position:fixed; bottom:0; left:0; right:0; background:white; border-top:1.5px solid var(--border); display:flex; padding:8px 0 14px; z-index:100; box-shadow:0 -4px 16px rgba(0,0,0,0.06); }
+.nav-item { flex:1; display:flex; flex-direction:column; align-items:center; gap:3px; cursor:pointer; }
+.nav-icon { font-size:20px; }
+.nav-label { font-size:10px; font-weight:700; color:var(--text3); text-transform:uppercase; letter-spacing:0.3px; }
+.nav-item.active .nav-label { color:var(--pink); }
+.nav-item.active .nav-icon { transform:scale(1.15); }
+
+/* TOAST */
+.toast { position:fixed; bottom:100px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--dark); color:white; padding:12px 24px; border-radius:30px; font-size:13px; font-weight:700; opacity:0; transition:all 0.3s; z-index:999; white-space:nowrap; box-shadow:0 4px 20px rgba(0,0,0,0.15); }
+.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+.toast.success { background:var(--green); }
+.toast.error { background:var(--red); }
+.toast.info { background:#1a73e8; }
+
+/* SCANNER */
+.scanner-overlay { display:none; position:fixed; inset:0; background:#000; z-index:500; flex-direction:column; }
+.scanner-overlay.open { display:flex; }
+.scanner-hdr { width:100%; padding:16px 20px; background:linear-gradient(135deg,#1a1a2e,#e91e8c); display:flex; align-items:center; justify-content:space-between; }
+.scanner-title { color:white; font-family:'Poppins',sans-serif; font-weight:700; font-size:16px; }
+.scanner-close { background:rgba(255,255,255,0.2); border:none; border-radius:50%; width:36px; height:36px; color:white; font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+.scanner-body { flex:1; position:relative; overflow:hidden; }
+#scannerVideo { width:100%; height:100%; object-fit:cover; display:block; }
+.scan-frame { position:absolute; top:50%; left:50%; transform:translate(-50%,-60%); width:260px; height:160px; border:3px solid var(--pink); border-radius:12px; box-shadow:0 0 0 9999px rgba(0,0,0,0.55); pointer-events:none; }
+.scan-line { position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,transparent,var(--pink),transparent); animation:scanLine 1.8s ease-in-out infinite; }
+@keyframes scanLine { 0%,100%{top:0} 50%{top:calc(100% - 3px)} }
+.scan-hint { position:absolute; bottom:28%; left:50%; transform:translateX(-50%); color:white; font-size:13px; font-weight:600; background:rgba(0,0,0,0.5); padding:8px 18px; border-radius:20px; white-space:nowrap; }
+.scan-result { width:100%; padding:14px 20px; background:var(--green); color:white; font-family:'Poppins',sans-serif; font-size:15px; font-weight:700; text-align:center; display:none; }
+
+.page { display:none; }
+.page.active { display:block; }
+.empty-state { text-align:center; padding:40px 20px; color:var(--text3); }
+.empty-icon { font-size:48px; margin-bottom:12px; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-top">
+    <div class="logo">
+      <div class="logo-icon">📦</div>
+      <div class="logo-text">FG Inventory<div class="logo-sub">Input Sheet</div></div>
+    </div>
+    <div class="header-date" id="headerDate"></div>
+  </div>
+  <div class="header-sub">
+    <span>Special You — Stock Management</span>
+    <span class="sync-badge disconnected" id="syncBadge">⬤ Not Connected</span>
+  </div>
+</div>
+
+<!-- PAGE: ENTRY FORM -->
+<div class="page active" id="page-entry">
+  <div class="stats-bar">
+    <div class="stat-card"><div class="stat-val" id="statTotal">0</div><div class="stat-lbl">Today</div></div>
+    <div class="stat-card"><div class="stat-val" style="color:var(--green)" id="statIn">0</div><div class="stat-lbl">IN</div></div>
+    <div class="stat-card"><div class="stat-val" style="color:var(--red)" id="statOut">0</div><div class="stat-lbl">OUT</div></div>
+  </div>
+
+  <!-- Pending Sync Banner -->
+  <div class="pending-banner" id="pendingBanner">
+    <div class="pending-text">⏳ <span id="pendingCount">0</span> entries sync pending hain</div>
+    <button class="retry-btn" onclick="syncPending()">🔄 Sync Now</button>
+  </div>
+
+  <div class="form-card">
+    <div class="form-title"><div class="form-title-dot"></div> New Entry</div>
+
+    <div class="field">
+      <label>📅 Date</label>
+      <input type="date" id="entryDate" />
+    </div>
+
+    <div class="field">
+      <label>🔢 EAN Code</label>
+      <div class="ean-input-wrap">
+        <input type="text" id="eanCode" placeholder="Type ya scan karo..." autocomplete="off" spellcheck="false" />
+        <button class="scan-btn" onclick="openScanner()">📷</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>🏪 Platform</label>
+      <div class="platform-grid">
+        <button class="platform-btn p-swiggy" data-p="Swiggy/Instamart" data-s="-I" onclick="selPlat(this)"><span class="pi">🔴</span>Swiggy</button>
+        <button class="platform-btn p-fba"    data-p="FBA"               data-s="-F" onclick="selPlat(this)"><span class="pi">🔵</span>FBA</button>
+        <button class="platform-btn p-zepto"  data-p="Zepto"             data-s="-Z" onclick="selPlat(this)"><span class="pi">🟢</span>Zepto</button>
+        <button class="platform-btn p-myntra" data-p="Myntra"            data-s=""   onclick="selPlat(this)"><span class="pi">🟡</span>Myntra</button>
+        <button class="platform-btn p-fbf"    data-p="FBF"               data-s=""   onclick="selPlat(this)"><span class="pi">🔷</span>FBF</button>
+        <button class="platform-btn p-blinkit"data-p="Blinkit"           data-s=""   onclick="selPlat(this)"><span class="pi">🟣</span>Blinkit</button>
+        <button class="platform-btn p-gogear" data-p="GoGear"            data-s=""   onclick="selPlat(this)"><span class="pi">⚙️</span>GoGear</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>🏷️ Final EAN Code <span class="auto-badge">AUTO</span></label>
+      <input type="text" id="finalEan" readonly placeholder="Auto-generated..." />
+    </div>
+
+    <div class="field">
+      <label>📝 SKU Name <span class="auto-badge">AUTO</span></label>
+      <div class="sku-display empty" id="skuDisplay">EAN enter karo SKU auto-fill hoga...</div>
+    </div>
+
+    <div class="field">
+      <label>↕️ Transaction Type</label>
+      <div class="txn-toggle">
+        <button class="txn-btn txn-in"  id="btnIn"  onclick="selTxn('In')">⬆️ IN</button>
+        <button class="txn-btn txn-out" id="btnOut" onclick="selTxn('Out')">⬇️ OUT</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>📊 Quantity</label>
+      <div class="qty-row" id="qtyRow">
+        <button class="qty-btn" onclick="chQty(-1)">−</button>
+        <input class="qty-input" type="number" id="qtyInput" value="1" min="1"
+          onfocus="document.getElementById('qtyRow').classList.add('focused')"
+          onblur="document.getElementById('qtyRow').classList.remove('focused')" />
+        <button class="qty-btn" onclick="chQty(1)">+</button>
+      </div>
+    </div>
+
+    <button class="submit-btn" id="submitBtn" onclick="submitEntry()">✅ Add to Sheet</button>
+    <div class="sync-status-row" id="syncStatusRow"></div>
+  </div>
+</div>
+
+<!-- PAGE: ENTRIES -->
+<div class="page" id="page-entries">
+  <div class="entries-header">
+    <div><span class="entries-title">All Entries</span><span class="entries-count" id="entriesCount">0</span></div>
+    <button class="clear-btn" onclick="confirmClear()">🗑️ Clear</button>
+  </div>
+  <button class="export-btn" onclick="exportCSV()">📥 Export CSV</button>
+  <div id="entriesList"></div>
+</div>
+
+<!-- PAGE: SETTINGS -->
+<div class="page" id="page-settings">
+
+  <!-- Master Sheet -->
+  <div class="form-card">
+    <div class="form-title"><div class="form-title-dot" style="background:var(--gold)"></div> Master Sheet (EAN → SKU)</div>
+    <p style="font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.6;">EAN Code aur SKU Name — entry mein auto-fill hoga. ✨</p>
+    <input type="text" placeholder="🔍 EAN ya SKU name search karo..." oninput="masterFilter=this.value;renderMasterRows()"
+      style="width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:10px;font-family:'Nunito',sans-serif;font-size:14px;outline:none;margin-bottom:10px;box-sizing:border-box;" />
+    <div style="display:flex;gap:8px;margin-bottom:12px;">
+      <button class="add-master-btn" onclick="addMasterRow()" style="flex:1;margin:0;">+ Add Row</button>
+      <button class="save-master-btn" onclick="saveMasterSheet()" style="flex:1;margin:0;">💾 Save</button>
+    </div>
+    <div class="master-header">
+      <span>EAN Code &nbsp;📷</span>
+      <span>SKU Name</span>
+      <span></span>
+    </div>
+    <div id="masterRows"></div>
+  </div>
+
+  <!-- Google Sheets Connect -->
+  <div class="goog-card">
+    <div class="goog-title">
+      <span style="font-size:20px;">📊</span> Google Sheets Connect
+    </div>
+
+    <div class="steps-box">
+      <strong>Setup (ek baar karna hai):</strong><br>
+      1️⃣ Google Sheet → <strong>Extensions → Apps Script</strong><br>
+      2️⃣ <strong>apps-script-code.gs</strong> ka code paste karo<br>
+      3️⃣ <strong>Deploy → New Deployment → Web App</strong><br>
+      4️⃣ Execute as: <strong>Me</strong> | Access: <strong>Anyone</strong><br>
+      5️⃣ Deploy URL copy karo → neeche paste karo 👇
+    </div>
+
+    <input class="goog-input" type="url" id="scriptUrl"
+      placeholder="https://script.google.com/macros/s/..." />
+
+    <div class="goog-btns">
+      <button class="btn-save-url" onclick="saveScriptUrl()">💾 Save</button>
+      <button class="btn-test-url" onclick="testConnection()">🔌 Test Connection</button>
+    </div>
+
+    <div class="conn-status" id="connStatus"></div>
+
+    <button onclick="cleanBlankRows()" style="width:100%;margin-top:10px;padding:11px;background:#fff8ec;color:#e65100;border:2px solid #ffe082;border-radius:10px;font-family:'Poppins',sans-serif;font-size:13px;font-weight:700;cursor:pointer;">
+      🧹 Sheet se Blank Rows Hatao
+    </button>
+
+    <div class="last-entry-box" id="lastEntryBox">
+      <div class="last-entry-lbl">📌 Sheet ki Last Entry</div>
+      <div class="last-entry-val" id="lastEntryVal"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- PAGE: SEARCH -->
+<div class="page" id="page-search">
+  <div class="form-card">
+    <div class="form-title"><div class="form-title-dot" style="background:#1565c0"></div> SKU Search</div>
+    <p style="font-size:12px;color:var(--text2);margin-bottom:12px;">SKU Code ya SKU Name se search karo 🔍</p>
+    <div class="search-box">
+      <input class="search-input" id="skuSearchInput" type="text" placeholder="SKU Code ya Name type karo..." oninput="onSkuSearch(this.value)" />
+      <button class="search-btn" onclick="onSkuSearch(document.getElementById('skuSearchInput').value)">🔍</button>
+    </div>
+    <div class="search-count" id="searchCount"></div>
+    <div id="skuResults"><div class="search-empty">⬆️ Upar search karo</div></div>
+  </div>
+</div>
+
+<!-- SCANNER -->
+<div class="scanner-overlay" id="scannerOverlay">
+  <div class="scanner-hdr">
+    <div class="scanner-title">📷 Barcode Scanner</div>
+    <button class="scanner-close" onclick="closeScanner()">✕</button>
+  </div>
+  <div class="scanner-body">
+    <video id="scannerVideo" playsinline autoplay muted></video>
+    <div class="scan-frame"><div class="scan-line"></div></div>
+    <div class="scan-hint">Barcode ko frame ke andar rakho</div>
+  </div>
+  <div class="scan-result" id="scanResult"></div>
+</div>
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav">
+  <div class="nav-item active" id="nav-entry" onclick="switchPage('entry')">
+    <div class="nav-icon">➕</div><div class="nav-label">Add Entry</div>
+  </div>
+  <div class="nav-item" id="nav-entries" onclick="switchPage('entries')">
+    <div class="nav-icon">📋</div><div class="nav-label">Entries</div>
+  </div>
+  <div class="nav-item" id="nav-search" onclick="switchPage('search')">
+    <div class="nav-icon">🔍</div><div class="nav-label">Search</div>
+  </div>
+  <div class="nav-item" id="nav-settings" onclick="switchPage('settings')">
+    <div class="nav-icon">⚙️</div><div class="nav-label">Settings</div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/zxing-js/0.20.0/zxing.min.js"></script>
+<script>
+// ======== STATE ========
+const BUILTIN_MASTER = {"X001N7LCI1-Z":"Maroon HBD With Net","X001N7LCI1":"Maroon HBD With Net","X001N7LCI1-B":"Maroon HBD With Net","X001N7LCI1-I":"Maroon HBD With Net","X001N7LCI1-F":"Maroon HBD With Net","X001N7LCI1-M":"Maroon HBD With Net","X001GGRNW3":"2 White Curtain With Light","X001GGRNW3-Z":"2 White Curtain With Light","DECGUGYHZZSUCJWU":"White Wisteria with Curtain Backdrop","X001GGRNW3-I":"2 White Curtain With Light","X001GGRNW3-F":"2 White Curtain With Light","X001GGRNW3-M":"2 White Curtain With Light","X00261K06D":"Pink White RG Chrome","X00261K06D-Z":"Pink White RG Chrome","X00261K06D-B":"Pink White RG Chrome","X00261K06D-I":"Pink White RG Chrome","X00261K06D-F":"Pink White RG Chrome","X00261K06D-M":"Pink White RG Chrome","X001JZQ6XN":"Maroon Pink","X001JZQ6XN-Z":"Maroon Pink","X001JZQ6XN-B":"Maroon Pink","X001JZQ6XN-I":"Maroon Pink","X001JZQ6XN-F":"Maroon Pink","X001JZQ6XN-M":"Maroon Pink","X001WWBKV1":"Black Groom to be","X001WWBKV1-Z":"Black Groom to be","X001WWBKV1-B":"Black Groom to be","X001WWBKV1-I":"Black Groom to be","X001WWBKV1-F":"Black Groom to be","SAHH5Z6AGGDZT5VB":"It my Bday Sash & Headband Black","X001WNU0PH":"Yellow Red Galaxy 5 Charka","X001PJNN2Z":"Green Leaves 4 & 1 Light","X001PJNN2Z-Z":"Green Leaves 4 & 1 Light","X001PJNN2Z-B":"Green Leaves 4 & 1 Light","X0023PMNX5-I":"Yellow Red Galaxy 5 Chakra","X001PJNN2Z-I":"Green Leaves 4 & 1 Light","X001PJNN2Z-F":"Green Leaves 4 & 1 Light","X001PJNN2Z-M":"Green Leaves 4 & 1 Light","28342896":"4 GL & 1 LIGHT","28342896-Z":"4 Green Leaves & 1 Light","28342896-B":"4 Green Leaves & 1 Light","28342896-I":"4 Green Leaves & 1 Light","28342896-F":"4 Green Leaves & 1 Light","X001SEWF67-Z":"Peppa Pig theme","X001ZUB9Z7":"FootBall Silver Chrome Theme","X001ZUB9Z7-Z":"FootBall Silver Chrome Theme","X001ZUB9Z7-B":"FootBall Silver Chrome Theme","X001ZUB9Z7-I":"FootBall Silver Chrome Theme","X001ZUB9Z7-F":"FootBall Silver Chrome Theme","DECHDYJZHXZZCRYY":"Tulle 2 Net With Lotus","X0025PRDV5":"Blue Chrome White HBD","X0025PRDV5-Z":"Blue Chrome White HBD","X0025PRDV5-B":"Blue Chrome White HBD","X0025PRDV5-I":"Blue Chrome White HBD","X0025PRDV5-F":"Blue Chrome White HBD","X0025PRDV5-M":"Blue Chrome White HBD","X00284QZ35":"Double Purple Gold Confetti","X00284QZ35-Z":"Double Purple Gold Confetti","X00284QZ35-B":"Double Purple Gold Confetti","X00284QZ35-I":"Double Purple Gold Confetti","X00284QZ35-F":"Double Purple Gold Confetti","X00284QZ35-M":"Double Purple Gold Confetti","X0021DFO2B":"Pink Peach Gold Chrome","X0021DFO2B-Z":"Pink Peach Gold Chrome","X0021DFO2B-B":"Pink Peach Gold Chrome","X0021DFO2B-I":"Pink Peach Gold Chrome","X0021DFO2B-F":"Pink Peach Gold Chrome","X0021DFO2B-M":"Pink Peach Gold Chrome","X001O9TJ2T":"Burgandy Pink","X001O9TJ2T-Z":"Burgandy Pink","X001QT3KU9-I":"Photoclip Light","X001O9TJ2T-I":"Burgandy Pink","X001O9TJ2T-F":"Burgandy Pink","DECH42HNFH3ZHX3T":"3 Orange Galaxy White Wisteria","X001PPEAXP":"Blue Monthly w/o Monthly","X001PPEAXP-Z":"Blue Monthly w/o Monthly","X001PPEAXP-B":"Blue Monthly w/o Monthly","X001PPEAXP-I":"Blue Monthly w/o Monthly","X001PPEAXP-F":"Blue Monthly w/o Monthly","9861819562360":"Avenger Theme","9861828108351-Z":"Crochet Flower Bouquet","9861828108351-B":"Crochet Flower Bouquet","9861828108351-I":"Crochet Flower Bouquet","9861828108351-F":"Crochet Flower Bouquet","X0026IATXZ-I":"Aniversary Foil","9861879584968":"Aritificial Red Rose With Teddy","9861879584968-Z":"Aritificial Red Rose With Teddy","9861879584968-B":"Aritificial Red Rose With Teddy","9861879584968-I":"Aritificial Red Rose With Teddy","9861879584968-M":"Aritificial Red Rose With Teddy","X002BDW5H":"Valentine Foil Balloons Candle","X002BDW5H-I":"Valentine Foil Balloons Candle","X002BDW5H-F":"Valentine Foil Balloons Candle","X002BDW5H-M":"Valentine Foil Balloons Candle","X00288GZTF":"5 Pastel Butterfly Foil","X00288GZTF-Z":"5 Pastel Butterfly Foil","X00288GZTF-B":"5 Pastel Butterfly Foil","X00288GZTF-I":"5 Pastel Butterfly Foil","X00288GZTF-F":"5 Pastel Butterfly Foil","X00288GZTF-M":"5 Pastel Butterfly Foil","X0025PLFCD":"25 White 10 Golden Chrome","X0025PLFCD-Z":"25 White 10 Golden Chrome","X0025PLFCD-B":"25 White 10 Golden Chrome","X001VA0HX1":"REtro Red Balloon","X0025PLFCD-I":"25 White 10 Golden Chrome","X0025PLFCD-F":"25 White 10 Golden Chrome","X0025PLFCD-M":"25 White 10 Golden Chrome","X001Q5QC67":"Baby Shower Rosegold","X001Q5QC67-Z":"Baby Shower Rosegold","X001Q5QC67-B":"Baby Shower Rosegold","X001Q5QC67-I":"Baby Shower Rosegold","X001Q5QC67-F":"Baby Shower Rosegold","X001Q5QC67-M":"Baby Shower Rosegold","X001QWRAI9":"Baby Shower Baby Boy & Girl","X001QWRAI9-Z":"Baby Shower Baby Boy & Girl","X001QWRAI9-B":"Baby Shower Baby Boy & Girl","X001QWRAI9-I":"Baby Shower Baby Boy & Girl","X001QWRAI9-F":"Baby Shower Baby Boy & Girl","X001QWRAI9-M":"Baby Shower Baby Boy & Girl","X001W3GK7T":"Purple Wisteria 12 Pcs","X0025G84OT-F":"Bride Headband & White BTB Sash","X001W3GK7T-Z":"Purple Wisteria 12 Pcs","X001W3GK7T-B":"Purple Wisteria 12 Pcs","X001W3GK7T-I":"Purple Wisteria 12 Pcs","X001W3GK7T-F":"Purple Wisteria 12 Pcs","X0026ID8KB":"Gold Bride to be Banner","X001W3GK7T-M":"Purple Wisteria 12 Pcs","X001WL93VL":"Pink Wisteria 12 pcs","X001WL93VL-Z":"Pink Wisteria 12 pcs","X001WL93VL-B":"Pink Wisteria 12 pcs","X001WL93VL-I":"Pink Wisteria 12 pcs","9861826611259":"Gogear Microfibre Cloth For Cleaning 250 gsm","9861829527564":"Car Duster","X001WL93VL-F":"Pink Wisteria 12 pcs","X001WL93VL-M":"Pink Wisteria 12 pcs","X001FKBBC3":"Rainbow Theme 1st HBD Kit","X001FKBBC3-Z":"Rainbow Theme 1st HBD Kit","X001FKBBC3-B":"Rainbow Theme 1st HBD Kit","X001FKBBC3-I":"Rainbow Theme 1st HBD Kit","X001FKBBC3-F":"Rainbow Theme 1st HBD Kit","X001FKBBC3-M":"Rainbow Theme 1st HBD Kit","X001OFBQXX":"2 Purple & 1 Net Kit","X001OFBQXX-Z":"2 Purple & 1 Net Kit","X001OFBQXX-B":"2 Purple & 1 Net Kit","X001XQKHH9-I":"Iron Man BDay Theme","X001OFBQXX-I":"2 Purple & 1 Net Kit","X001OFBQXX-F":"2 Purple 2 Net","X001OFBQXX-M":"2 Purple & 1 Net Kit","X001QWCUZR":"Dinosaur Theme Birthday Decor","X001QWCUZR-Z":"Dinosaur Theme Birthday Decor","X001QWCUZR-B":"Dinosaur Theme Birthday Decor","X001QWCUZR-I":"Dinosaur Theme Birthday Decor","X001QWCUZR-F":"Dinosaur Theme Birthday Decor","X001QWCUZR-M":"Dinosaur Theme Birthday Decor","X0029EUBPH":"Animal Foil Cake Topper HBD","X0029EUBPH-Z":"Animal Foil Cake Topper HBD","X0029EUBPH-B":"Animal Foil Cake Topper HBD","X0029EUBPH-I":"Animal Foil Cake Topper HBD","X0029EUBPH-F":"Animal Foil Cake Topper HBD","X0029EUBPH-M":"Animal Foil Cake Topper HBD","X001WNV0PH":"Yellow Red Galaxy 5 Charka","X001WNV0PH-Z":"Yellow Red Galaxy 5 Charka","X001WNV0PH-B":"Yellow Red Galaxy 5 Charka","X001WNV0PH-I":"Yellow Red Galaxy 5 Charka","X001WNV0PH-F":"Yellow Red Galaxy 5 Charka","X001WNV0PH-M":"Yellow Red Galaxy 5 Charka","9861887043624":"Car Bike Reflector","X001Y1YU6R":"Space Backdrop HBD Theme","X001Y1YU6R-Z":"Space Backdrop HBD Theme","X001Y1YU6R-B":"Space Backdrop HBD Theme","X001Y1YU6R-I":"Space Backdrop HBD Theme","X001Y1YU6R-F":"Space Backdrop HBD Theme","X002D80SHF-F":"Lavender Galaxy With Light","9861849558746":"Heart Shape Box With Teddy","9861849558746-Z":"Heart Shape Box With Teddy","X001MI2Y6Z-F":"Blue Net 1 Bday","9861849558746-I":"Heart Shape Box With Teddy","9861849558746-M":"Heart Shape Box With Teddy","X001TQI4Y1":"Frozen Theme HBD Decor","X001TQI4Y1-Z":"Frozen Theme HBD Decor","X001TQI4Y1-B":"Frozen Theme HBD Decor","X001TQI4Y1-I":"Frozen Theme HBD Decor","X001TQI4Y1-F":"Frozen Theme HBD Decor","X001TQI4Y1-M":"Frozen Theme HBD Decor","X00200SE13":"Pink Purple HBD Decor","X00200SE13-Z":"Pink Purple HBD Decor","X00200SE13-B":"Pink Purple HBD Decor","X00200SE13-I":"Pink Purple HBD Decor","X00200SE13-F":"Pink Purple HBD Decor","X002898DGR-I":"Red Ribbon","X002621ZCZ":"Mettalic Gold","X002621ZCZ-Z":"Mettalic Gold","X002621ZCZ-B":"Mettalic Gold","X002621ZCZ-I":"Mettalic Gold","X002621ZCZ-F":"Mettalic Gold","X0028989VL-I":"Pink Ribbon","X001JP3FUF":"White Gold","X001JP3FUF-Z":"White Gold","X001JP3FUF-B":"White Gold","X001JP3FUF-I":"White Gold","X001JP3FUF-F":"White Gold","X001MI2Y6Z-I":"Blue Net 1st BDay","91164536":"Kalsh Toran","91164536-Z":"Kalsh Toran","9861830754959":"GoGear Solar Crytal Perfume","91164536-B":"Kalsh Toran","X00274330T-F":"white Gold With Golden Fringe","X002AOPLZ1-F":"Blue Net 5 Mtr & Light","X0028G580J-F":"Black White 21st Bday","X0001SEWF67":"Peppa Pig theme","X0001SEWF67-Z":"Peppa Pig theme","X0001SEWF67-B":"Peppa Pig theme","X0001SEWF67-I":"Peppa Pig theme","X0001SEWF67-F":"Peppa Pig theme","X0001SEWF67-M":"Peppa Pig theme","91131682":"Green Kalsh 1 pcs","91131682-Z":"Green Kalsh 1 pcs","91131682-B":"Green Kalsh 1 pcs","91131682-I":"Green Kalsh 1 pcs","91131682-F":"Green Kalsh 1 pcs","91131682-M":"Green Kalsh 1 pcs","X001MF16R-Z":"Pastel Butterfly","X001MF16R-B":"Pastel Butterfly","X001MF16R-I":"Pastel Butterfly","X001MF16R-F":"Pastel Butterfly","X001MF16R-M":"Pastel Butterfly","X001IG1T0X":"Valentine Canopy Items","X001IG1T0X-Z":"Valentine Canopy Items","X001IG1T0X-B":"Valentine Canopy Items","X001IG1T0X-I":"Valentine Canopy Items","X001IG1T0X-F":"Valentine Canopy Items","X001IG1T0X-M":"Valentine Canopy Items","X00289OQ01":"25 Pink 25 Purple","9861835020462":"Gogear Mobile phone holder","X00289OQ01-Z":"25 Pink 25 Purple","X00289OQ01-B":"25 Pink 25 Purple","X00289OQ01-I":"25 Pink 25 Purple","X00289OQ01-F":"25 Pink 25 Purple","X00289OQ01-M":"25 Pink 25 Purple","DECHDYZHXZZCRYY":"Tulle 2 Net With Lotus","DECHDYZHXZZCRYY-Z":"Tulle 2 Net With Lotus","DECHDYZHXZZCRYY-B":"Tulle 2 Net With Lotus","DECHDYZHXZZCRYY-I":"Tulle 2 Net With Lotus","DECHDYZHXZZCRYY-F":"Tulle 2 Net With Lotus","X001LCXJQV":"Barbie Bday Theme","X001LCXJQV-Z":"Barbie Bday Theme","X001LCXJQV-B":"Barbie Bday Theme","X001LCXJQV-I":"Barbie Bday Theme","X001LCXJQV-F":"Barbie Bday theme","X001LCXJQV-M":"Barbie Bday Theme","SPY0FSTDC105282149":"S Y Welcome 2026","SPY0FSTDC105282149-Z":"S Y Welcome 2026","SPY0FSTDC105282149-B":"S Y Welcome 2026","SPY0FSTDC105282149-I":"S Y Welcome 2026","SPY0FSTDC105282149-F":"S Y Welcome 2026","X001MR79QL-I":"Pack of 2 Golden Fringe Curtains","X0025PO46H-I":"RG Chrome White HBD","X00289SRQ3":"Pink Butterfly Backdrop Theme","X00289SRQ3-Z":"Pink Butterfly Backdrop Theme","X00289SRQ3-B":"Pink Butterfly Backdrop Theme","X00289SRQ3-F":"Pink Butterfly Backdrop Theme","X00289SRQ3-M":"Pink Butterfly Backdrop Theme","X00206D3U9":"Multicolor Golden Chrome","X00206D3U9-Z":"Multicolor Golden Chrome","X00206D3U9-B":"Multicolor Golden Chrome","X00206D3U9-I":"Multicolor Golden Chrome","X00206D3U9-F":"Multicolor Golden Chrome","X00206D3U9-M":"Multicolor Golden Chrome","X00261TT5B":"3 Blue Golden Chrome theme","X00261TT5B-Z":"3 Blue Golden Chrome theme","X00261TT5B-B":"3 Blue Golden Chrome theme","X00261TT5B-I":"3 Blue Golden Chrome theme","X002D8OYW5-f":"Lavender Chiffon Curtain Set of 2","X00261TT5B-F":"3 Blue Golden Chrome theme","9861891957900-z":"Santa Cap With led light","X00261TT5B-M":"3 Blue Golden Chrome theme","92731406":"Green Dark Green Confetti","92731406-Z":"Green Dark Green Confetti","92731406-B":"Green Dark Green Confetti","92731406-I":"Green Dark Green Confetti","92731406-F":"Green Dark Green Confetti","92731406-M":"Green Dark Green Confetti","X0020AB57N":"Pink Dark Pink Naming Ceremony","X0020AB57N-Z":"Pink Dark Pink Naming Ceremony","X0020AB57N-B":"Pink Dark Pink Naming Ceremony","X0020AB57N-I":"Pink Dark Pink Naming Ceremony","X0020AB57N-F":"Pink Dark Pink Naming Ceremony","X0020AB57N-M":"Pink Dark Pink Naming Ceremony","X0026ICC4V":"Black Gloden Chrome","X0026ICC4V-Z":"Black Gloden Chrome","X0026ICC4V-B":"Black Gloden Chrome","X0026ICC4V-I":"Black Gloden Chrome","X0026ICC4V-F":"Black Gloden Chrome","X0026ICC4V-M":"Black Gloden Chrome","X001GUS5QH":"Jumbonet","X001GUS5QH-Z":"Jumbonet","X001GUS5QH-B":"Jumbonet","X001GUS5QH-I":"Jumbonet","X001GUS5QH-F":"Jumbonet","X001GUS5QH-M":"Jumbonet","X00200WRWF":"Mint Green Theme Birthday","X00200WRWF-Z":"Mint Green Theme Birthday","X00200WRWF-B":"Mint Green Theme Birthday","X00200WRWF-I":"Mint Green Theme Birthday","X00200WRWF-F":"Mint Green Theme Birthday","X00200WRWF-M":"Mint Green Theme Birthday","DECGVJEFMFGTAH5Z":"3 Orange Galaxy White Wisteria","DECGVJEFMFGTAH5Z-Z":"3 Orange Galaxy White Wisteria","DECGVJEFMFGTAH5Z-B":"3 Orange Galaxy White Wisteria","DECGVJEFMFGTAH5Z-I":"3 Orange Galaxy White Wisteria","DECGVJEFMFGTAH5Z-F":"3 Orange Galaxy White Wisteria","DECGVJEFMFGTAH5Z-M":"3 Orange Galaxy White Wisteria","X0020667VB":"White Golden Chrome","X0020667VB-Z":"White Golden Chrome","X0020667VB-B":"White Golden Chrome","X0020667VB-I":"White Golden Chrome","X0020667VB-F":"White Golden Chrome","X0020667VB-M":"White Golden Chrome","X00261LNP5":"Pastel Red Golden Chrome HBD","X00261LNP5-Z":"Pastel Red Golden Chrome HBD","X00261LNP5-B":"Pastel Red Golden Chrome HBD","X00261LNP5-I":"Pastel Red Golden Chrome HBD","X00261LNP5-F":"Pastel Red Golden Chrome HBD","9861838030888":"White Pink Gold HBD Ribbon","X00284TEG5":"Purple Butterfly Backdrop","X00284TEG5-Z":"Purple Butterfly Backdrop","9861892118249":"Fairy Light","X00284TEG5-I":"Purple Butterfly Backdrop","X00284TEG5-F":"Purple Butterfly Backdrop","X00284TEG5-M":"Purple Butterfly Backdrop","X001QWRAIT":"YL3 Net Leaves","X001QWRAIT-Z":"YL3 Net Leaves","X001QWRAIT-B":"YL3 Net Leaves","X001QWRAIT-I":"YL3 Net Leaves","X00258JMS9-I":"RG Chrome Balloons 25 Pcs","X001QWRAIT-M":"YL3 Net Leaves","X0020GPICF":"Bule Half Palm Leaves","X0020GPICF-Z":"Bule Half Palm Leaves","X0020GPICF-B":"Bule Half Palm Leaves","X0020GPICF-I":"Bule Half Palm Leaves","X0020GPICF-F":"Bule Half Palm Leaves","X0020GPICF-M":"Bule Half Palm Leaves","X001KF9JGN":"Blue Monthly 1st Bday","8909861869356":"Blue Monthly w/o Monthly","X0026GX9XJ-I":"White Gesture Goggle","X001KF9JGN-I":"Blue Monthly 1st Bday","X001KF9JGN-F":"Blue Monthly 1st Bday","9861842694991-z":"Pack of 1 Santa Face Headband","X001OT825J":"Bule Tulle","X001XW73F7-I":"Wooden Clip With Led Light","9861882976828-I":"Hanuman Sitting Murti 4 inch","X001OT825J-I":"Bule Tulle","X001OT825J-F":"Bule Tulle","X001V6LG21-I":"Metallic White Balloon Pack of 50","X0020EKKQL":"White Golden Welcome","X002B8TJW7-F":"Green Football Backdrop Theme","X0027DF9I9-I":"Red & Gold Anniversary Paper banner","X0020EKKQL-I":"White Golden Welcome","X0020EKKQL-F":"White Golden Welcome","9861823171091-Z":"Snowflakes Bunting","X001QT3KV9":"Photoclip Light","RIBH95JBYNC7YZJZ":"Black Ribbon Set of 5","X001QT3KV9-B":"Photoclip Light","X001QT3KV9-I":"Photoclip Light","X001QT3KV9-F":"Photoclip Light","107670412":"Pastel rainbow Theme","X0025PO46H":"RG Chrome White HBD","X0028QGH1X-f":"Peach Net Light","X0025PO46H-B":"RG Chrome White HBD","X0025PO46H-F":"RG Chrome White HBD","X0025PO46H-M":"RG Chrome White HBD","X00206CTAJ":"Pink 25 Purple 25 Golden","X00206CTAJ-Z":"Pink 25 Purple 25 Golden","X00206CTAJ-B":"Pink 25 Purple 25 Golden","X00206CTAJ-I":"Pink 25 Purple 25 Golden","X00206CTAJ-F":"Pink 25 Purple 25 Golden","X00206CTAJ-M":"Pink 25 Purple 25 Golden","X001QWHZ0H":"3 Peach GL Net","X001QWHZ0H-Z":"3 Peach GL Net","X001QWHZ0H-B":"3 Peach GL Net","X001QWHZ0H-I":"3 Peach GL Net","X001QWHZ0H-F":"3 Peach GL Net","X001QWHZ0H-M":"3 Peach GL Net","X002898M9E":"Purple Chrome HBD Net","X002898M9E-Z":"Purple Chrome HBD Net","X002898M9E-B":"Purple Chrome HBD Net","X002898M9E-I":"Purple Chrome HBD Net","X002898M9F-F":"Purple Chrome HBD Net","9861888540481-Z":"Golden Merry Christmas Goggle","X0010P88WP":"white Net Decor","X0010P88WP-Z":"white Net Decor","X0010P88WP-B":"white Net Decor","X0010P88WP-I":"white Net Decor","X0010P88WP-F":"white Net Decor","X0010P88WP-M":"white Net Decor","X00242C25V":"White Pink Wisteria","X002AOWZ7D-F":"Peach Net 5 Mtr Light","X00242C25V-B":"White Pink Wisteria","X00242C25V-I":"White Pink Wisteria","X00242C25V-F":"White Pink Wisteria","RIBH95H6KC53WZ3U":"REd Ribbon 2 Glue Dot Sheet","91131534":"Maroon Pink","X001JP3ES3":"Batsman Poster","X001JP3ES3-Z":"Batsman Poster","X001JP3ES3-B":"Batsman Poster","X001JP3ES3-I":"Batsman Poster","X0029F3IKB":"Teddy Theme for Birthday","X001JP3ES3-F":"Batsman Poster","SPYOFSTDC100203324":"Gold Rose Urli Diya 13 inches","X001JP3ES3-M":"Batsman Poster","X0023PMNX5":"Yellow Red Galaxy 5 Chakra","X0023PMNX5-Z":"Yellow Red Galaxy 5 Chakra","X001V4JJG3-I":"Pastel Yellow Fringe Curtain","X0023PMNX5-F":"Yellow Red Galaxy 5 Chakra","X0023PMNX5-M":"Yellow Red Galaxy 5 Chakra","X001UUP2I7":"Party Poppers","SKU7":"White Dotted Cap Pack of 20","X0028BDW5H":"Valentine Foil Balloons Candle","SKU9-I":"Red Balloon","SKU6-I":"Blue White Metallic Silver Confetti","SKU10":"Yellow Green Wristria Kit","SKU11":"Aniversary Foil","31957647":"White GOld","X001FRRZFD":"Pink Purple Butterfly","X001FRRZFD-Z":"Pink Purple Butterfly","X001FRRZFD-B":"Pink Purple Butterfly","X001FRRZFD-I":"Pink Purple Butterfly","X001FRRZFD-F":"Pink Purple Butterfly","X001FRRZFD-M":"Pink Purple Butterfly","X0027PIWZT":"Will You be my Valentine Decor","X0027PIWZT-Z":"Will You be my Valentine Decor","X00233SGJ7":"Bohofy Room Decor Poster","X001DTDY8Z":"P R Without Pump","SKU12":"Gold Bride to be Banner","X001MIH8UR":"Pack of 2 Pink Net Backdrop","X001OIJ29F":"Maroon Gold Tropical Palm Leaves","X0020667UB":"White Golden Chrome","X001IGCJGL-Z":"Love Canopy Tent Valentine Day","X0027WB92F":"You Complete me Poster","X001XW73F7":"Wooden Clip With Led Light","X001YM14XN":"Red & Pink Balloon Valentine Day","X001PF7N4X":"Red And White Balloon Valentine","X0027Y4L87":"Valentine Decor Items with red and white balloon","X002B2BJHV-F":"4 Pastel Butterfly With Net","DECGVCX7PVXJ8QSH":"REd Green Yellow Galaxy","8909861850576":"GoGear 300gsm Microfibre","DECGU6SFQKNJPWCZ":"Red Chiffon pack of 3","DECGZSTFVZPVHZY4":"Peach Net Light","DECGYGA4HSXWHVT7":"Fairy Light","DECGT886ZBZFGABM":"2 Marigold White Net","DECH2X5K4EG6WHRF":"2 Dusky Pink 7 Lotus","DECHEW76U7WXXHTF":"White Stand Mix","9861850018949-I":"New Year Party Poppers","X0027DOR4V-I":"Blue paper Flag Decor","SPYOFSTDC100193308":"Metal Green Lotus Urli","SPYOFSTDC100203325":"Gold Rose Urli 9 inch","SPYOFSTDC100203307":"Red Rose Urli 9 inch","SPYOFSTDC100203321":"Metal Double Flower Urli","SPYOFSTDC100440382":"Urli 11 Inch","9861807985430-Z":"Snowflakes Goggles","DECHDG7FWWUWMUEP":"Lotus Hanging 10 Pcs","SPYOFSTDC91165194":"Heavy Mogra Latkan Pack of 5","DECHDWNYN2ZJH5QA":"Ganesh ji Backdrop","9861805508099-Z":"Red Hanging Star Pack of 1","X0026GZ5TZ-I":"Team Bride Goggles","X0020FZLQ9-I":"Pink and Purple Bride to be Sash","9861839150509-Z":"Christmas Ribbon Roll","9861873982791-Z":"christmas ribbon","9861885945753-Z":"Red Santa Cap Goggles","9861816373358-Z":"Set of 1 green Antler Goggles","9861837329075-Z":"Gold Glitter Reindeer Headband","9861859051145-I":"Lotus Sticker - 20 Pcs","X0022ZRNAJ-I":"Tri-Color Hanging for Republic Day 4pcs","X0026GXGZF-I":"Mutlicolor Party Goggles","9861819624228":"Red Bow Mug For Valentine Gifting","X001MF16R":"Pastel Butterfly","9861823072107":"Valentine Gift With Pendant & Ring Heart Box","X001PF13M1":"I love You Red and Black Valentine Day","X001Y3NZQV":"Theme Valentine Day Backdrop Decor","X001Y31YFZ":"i love you Red and Pink Balloon Valentine","X0027PM9CL":"I Love You Purpose Day Decoration Valentine","X001Y37KW1":"Balloons & Frill Decor for Valentine Day","X0027VUBBL":"Heart Balloons & You Complete Poster","X001XWY70V":"Pastel Theme Love Valentine Day Decor","SPYOFSTDC104344304":"I Love You Purpose Day Decoration Valentine","SPYOFSTDC105281670":"I love You Red and Black Valentine Day","X001XMWWIP":"Rosegold and star Valentine Day","SPYOFSTDC104344297":"Valentine with Heart Balloons & You Complete me","SPYOFSTDC91164392":"Romantic Tent Canopy Valentine","SPYOFSTDC105282240":"Rosegold Love & Star Valentine Day","SPYOFSTDC95321124":"Balloons & Frill Decor for Valentine Day","X0026I958Z-I":"Golden Cursive Baby Shower Banner","SPYOFSTDC91165410":"Romantic love valentine day decor","SPYOFSTDC90579786":"Pastel Theme Love Valentine Day Decor","DECGYDHAZUBBZMY8":"3 Yellow Galaxy With 5 Mogra","SPYOFSTDC91164636":"Red & white balloons for valentine Day","SPYOFSTDC123961339":"Pink Canopy Tent Love Balloon Decor","SPYOFSTDC104341310":"Winter Couple Minature For valentine Gift","SPYOFSTDC104344302":"You Complete me Poster, Balloon And Candle","SPYOFSTDC104341289":"Minature for Home Decor For Valentine Gift","SPYOFSTDC104341295":"Wedding Pink Minature For Valentine Gift","X001XNZ08N-F":"Red Blue White Multipurpose","SPYOFSTDC104691515":"Pink Heart Scented Candle For Valentine Day","X001MR79QL":"Pack of 2 Golden Fringe Curtains","9861887142723":"Red Flower Bouquet","9861828108351":"CRochet Flower Bouquet","9861871149004":"Rose Teddy With Love Card","SPYOHGST124110539":"Hamper With Sipper, Pendants","SPYOHGST124110508":"Red Metal Rose with Teddy For Valentine Day","SPYOHGST124110565":"Hamper With Mugs, Love Pendant & Love Cards","SPYOHGST124110517":"Hamper With Mugs, Teddy Candle & Love Cards","DECGTE7SD8KYSPCM":"Pink Wistreria pack of 12","CRNGKEMBFKFHKRZP":"Tulle 2 Net Light","SPYOHGST124110582":"Artificial Gold Rose For Valentine Day","SPYOHGST124110496":"Metal Rose Love Card","DECGYG5FCPNNTFBM":"Olive Green Ivory Galaxy Net Kits","DECGVDS43GWUFQYX":"2 DARK RED 2 YELLOW 2 ORANGE 2 LIGHT KIT","DECGYDQ2GT3KNUX9":"3 Yellow 4 Charka 2 Backdrop","ARFGKHF5YXGVJZHG":"2 Marigold With White","DECGWYUE65TQ3Z7T":"Naruro Foil Theme","SPYOHGST124110568":"Red Rose","X001WNU0PH-F":"Red Yellow Orange Galaxy With Lights","X001MZHFFN-f":"Maroon Bride to be Net","X00233SQDN":"Anniversary Canpoy With Foil Balloons","X001L1EGJB-I":"Blue White Metallic Silver Confetti HBD Kit","X0026I89BT":"Retriement Gold Foil Balloon Banner","X0026I958Z":"Bady Shower Gold Confetti","X0020G2AKD":"Pink & Gold Bride to be Sash","X0026ICHSF":"Rosegold Bride To Be Foil Balloon","X00258ILGD":"Gold Confetti Balloons- 50 Pcs","X001IGCJGL":"Red Heart Love Canopy","X0027DCMFH":"2 Pcs of Balloon Gule Dot Tape","X002I08GDV-F":"CRochet Flower Bouquet","X002HULUET-f":"Red Metal Rose For Valentine Gift","X001XHT5TJ":"1 Big Cap With 9 Blue Bday Caps","X001YMBRVH":"Gold Paper Crown For Kid 12 pcs","X002A93VDF-F":"Red & Blue Bike Bday Theme","X00288H8UF-F":"White Pink Gold HBD With Ribbon","9861834812853":"Pink Peach Gold Chrome","X002A3TUAJ-F":"Unicorn Double Banner Theme","X0025G74GN-i":"Black Its my Birthday sash","X0021QJF8R-i":"Annaprashan Banner","X002732R0BN-F":"White Rosegold Bride to be","9861856996364":"Gogear Silver Sunshade","X00289DQO1-F":"Pink Purple with Pink Ribbon","X001S3H4AZ-F":"GL6","XFBALOTUS10":"Lotus Stickter pack of 10","X0028R24Q9-F":"Lotus Stickter pack of 20","X002898O1L-F":"Black Ribbon Pack of 5","X002AOSVXF-F":"White Net 5 Mtr & Light","X0028PZ4GN-F":"Pink Net Light","X001HA2S05-F":"Tulle 3 Net","9861811381921":"Go Gear Puncture Kit","X001Y1305T":"Olive Green Ivory Galaxy","9861807849008":"Gogear Umbrella Sunshade","9861895981710":"Zigzag Neck Pillow","9861896836798":"Gogear Interior Duster","9861894889659":"Gogear Car Neck pillow","9861817937870":"Gogear car back seat supporter","9861879396516":"Military bike cover","9861821494536":"Gogear Tissue Holder For Car","9861884851901":"Gogear Soft Brush","9861801072372":"Gogear Tectical Riding Gloves","9861817473750":"Gogear Full Arms","X001YWTE49-f":"Metallic Gold Black HBD","X002B3SKJ5-F":"5 PAstel Butterfly With Net Light","X00261CCYV":"Black Golden Chrome HBD","9861867524488":"Trishul Shiva","9861818367980":"Mini Ramji","9861853321213":"Supavitra Ramlalla","X002AM3KDX-F":"Animal Foil Jungle Backdrop Theme","X00IMI2Y62-F":"Blue Net 1 Bday","X00258JNS9":"RG Chrome Balloon 25 Pcs","X001YBGQF5-F":"4 White Net Money Plant Leaves Light","X002AOWKHN-F":"Pink Net 5 Mtr","8909861893122":"Maroon Bday With Net","X002A91PBF-F":"Jungle Backdrop theme","X0026N9H97-F":"wHITE Pink Welcome Home","X002D8OSHF-F":"Lavender Galaxy With Light","9861875970635":"Unicorn Pastel Butterfly","X00273PA47-F":"Peach Gold Paper Flag Theme","8909861886131":"Pink Purple Butterfly HBD","X00206IEX7-F":"Rosepink RG Confetti HBD","X001OPAZJ9-F":"White Gold Bday canopy","X0026SM0TB-F":"RG Bride To be & Heart Foil theme","X001FJAJ09-F":"Jumbonet Happy Bday","X001OFSPV9-F":"Black White Silver Confetti","X0022YHK5X":"Pastel Red 1/2 Bday With Pump","X002399HMV-F":"Olive Green Welcome Theme","X00285IZKP-F":"4 Pastel Butterfly Foil Kit","9861810618608":"Yellow Galaxy with Green Leaves & Light","X0026P9O7P":"Neon Cap Pack of 5","X0027DROJL":"1 Big Cap With 19 Blue Bday Cap","X00285U5VH":"Red Heart Wall Sticker","X0029F3IKB-F":"Brown Teddy theme","X001XI1DBV-F":"White Multicolor Dotted Cap 20 Pcs","X001W3LK8X-Z":"Paper Bat Halloween Theme","PINKRi":"Pink Ribbon","9861850662357":"Gear Cleaning Gel Jelly","9861842795582":"Gogear Ash Tray","9861812312603":"Gogear Face Mask","9861803830321":"Gogear Support Pillow","9861844230999":"Go Gear Scooty Cover","9861823288669":"GOgear Motercycle Eye & Face Protector","BLUE5MTR-F":"Blue Net 5 Mtr & Light","X001WQBB1L-F":"Gold Vines Pack of 6","X001Y8YIT9-I":"Pink Birthday Cap Pack of 6","9861818938302":"Gogear Microfibre Cloth For Cleaning 350 gsm","X00IMI2Y62-I":"Blue Net 1st BDay","X0022Y331N-f":"White Net 5 Mtr & Ribbon","SPYOHGST124110515":"Mug, Jewellery Box Minature, Candle","X001XQKHH9":"Ironman Bday Theme","X0028G58OJ-F":"Black White 21st Bday","X0026A1NC9-F":"Burgundy BTB With Headbead","X0027433OT-F":"white Gold With Golden Fringe","X0020EE8Y1-F":"Brown & Peach Welcome Home Golden","X001STHKYJ":"Minnie Mouse Foil Theme","X001Y1305T-F":"Olive Green Ivory Galaxy","X0026GVR7T":"Cupcake Bday Goggle","X002CP4MMV":"Evil Eye","X002CP9SC5":"Boho Pikachu","X001LCXJQV-z":"Barbie Bday Theme","X0029F3IKB-Z":"Teddy Theme for Birthday","X002CCT0JJ-f":"Evil Eye","X0029YROST-F":"Landscape Tapetry","X0023DYZ2J-F":"Eye Lashes Heart","X00286Y6ZH-F":"Bride To be Sash","9861861556652":"Bike Sheet Cover","X00286H2FX-f":"Acrylic Mirror Lotus Pack of 4","X002CF83V7-f":"Hanuman Backdrop","X002645UK1-i":"Game Over Sash","DECGYBN6VQZFHFRV":"Light Green Galaxy Pack of 2","X0020GYUKB-f":"Mummy Sash Mom to be headbad","DECGPWAWQFKGGG6H":"Golden Flag Light","DECGWNKCZKDUBGWZ":"White Dotted Cap","DECGYG9QFYT4ZWVF":"Red Heart Frill 8 pc","DECGV2XFEXDGZBHW":"Pink Rosevines 5 ft","BCBHJW48SZHGHB6D":"K POP","BCBHJX5PSGTWPJHQ":"K POP 70","CPXHDPTGKH8KCAVJ":"Sy-BoxCrinkle-2","DECGQP22W4ZK9GGF":"6C-TF0C-SFAS","DECGV2TM3PGXYNX5":"Sy-eyemask-10","DECGVKJ3NZ2992ZG":"Sy-Haldi-red,green & yellow","DECGWH2KZZA5PYHN":"A1-XX3R-8D9C","DECGX4FBUZVJVGBD":"SY-WoodenClip-21","DECGXG9UC5RYU3KQ":"SY-PinkRedHeart-8","DECGYCKZGBUC6ZTF":"Sy-Pinkfairywings","DECGYH4DPZN2V6XG":"Sy-ivorypink-79","DECGYH5HVHKUHCHN":"Sy-kitegarland","DECGYJ5YGUV8MUVY":"Sy-redpapergarland-4","DECH5AKFZZRFWEUZ":"Sy-HaldiChakra-11","DECH8EWQUK2AZ7QN":"Sy-ValentinePropose-49","DECH8EXVMMZRUXCH":"Sy-RedHeart","DECH8UBNVFZH4NFR":"Sy-ButterflyPurple-70","DECH9MFZWYDAPUAB":"Sy-BlueCurtain-6","DECHEPEF244CFFJK":"Sy-LavenderLight-6","RIBH95H8WV3PCNGC":"Sy-PinkRibbon-2","SAHH5HB2MC8KA9QZ":"SY-BdaySash&HairBand-White","SAHH5HDUDVQWZQGH":"SY-BTBSash&Headband-White","STIH578DJZMZBBT4":"SP-Pink-LotusSticker-10","STIH8UFBYJYSPF6P":"Sy-RedHeart-Sticker","X00297JV23-I":"Boho Green Flower Wallpaper","X001MI2Y6Z":"Blue net 1st bday","102395255067":"Peach galaxy","9861821704536-Z":"Small charkhi","9861823981386":"Green tinsel star","X001MOF579-f":"Pink purple new","X001KOD9FV-f":"Pink & White","X001KK5VB5-f":"Pastle gold star","X001MPFGGX-f":"Green yelow v cut","SPYOFSTDC88356978":"Heavy mogra latkan 2 pcs","X001OIC0S5-f":"Flower clip net v cut","X001QWCV0V-f":"3 Turquois gl net","SPYOFSTDC91165142-m":"Red beads heavy ganesh toran","SPYOFSTDC91164908":"Red & Gold diya toran","SPYORGNR124069778":"Jewellery box","9861883937880":"Metal Phone MOunt Holder","X00293KJJ1":"Wooden wallpaper","BCBHATCZJJKES4ZD":"Teddy bear bday theme","SPYOFSTDC100203323":"Heavy mogra latkan urli","SPYOFSTDC91164678":"YELLOW SWASTIK TORAN WITH MIRROR MOGRA","SPYOFSTDC91164860":"RED BEADS KALAS TORAN","SPYOFSTDC91164960":"GANESH TORAN","SPYOFSTDC911164960":"GANESH TORAN","SPYOFSTDC91164530":"RED SWASTIK TORAN","SPYOFSTDC91164566":"chakra latkan pack of 10","SPYOFSTDC104691516":"scented candle for gift items","X0023CRQ49":"Lotus Hanging Buds 5 Pcs","SPYOFSTDC100203317":"Red Rose Urli","SPYOFSTDC91164536":"green kalash toran set of 2","SPYOFSTDC100203315":"lotus urli bowl with 5 candles","98373586":"purple wisteria white net","X001VWK14J-f":"white wisteria pack of 12","9861899219031":"Gogear sunshade","9861879929592":"Go gear car dustbin","X002DFFTNB-F":"White Wisteria With Stand","X002304NC9-F":"Blue Monthly 1st Bday Pump","X001WUK785-F":"Maroon orange Peach Galaxy 1 Light","X0026I89BT-I":"Retriement Gold Foil Balloon Banner","X0027DG27L-I":"Balloon Flower Clip","X001OIGJM3-F":"Pink Purple bride to be","X001OIJ29F-I":"Maroon Gold tropical Plan leave","X0026P3OYJ-I":"HBD Pastal Letter Candle","X002A91PB5-F":"Pink White Gold crown 1st Bday","X001WH1N9P-I":"Metallic Blue Balloons 50 pcs","9861887387520-Z":"3 ft Christmas Tree","DECGYS4FKRGWFMR4":"Rainbow Fringe Pack of 2","X001YGWKWN-I":"6 Pcs Minion Box with Sketch Pen","X00288KOW9-F":"White Balloon with Ribbon With Light","X002A3WOHP-F":"Mermaid with OceAN hbd","X001RT95S9-F":"Burgundy Ballons 100pcs","X0026WFMGZ-F":"Peach Gold Peach Net","X001WUAGIB-F":"2 Orange and 1 Peach Galaxy With Light","X00262VVQ5-I":"Golden HBD Foil Banner","X001WW2APB-F":"Red Levaes 5 & 1 Light","X001W517RP-F":"Golden HBD Flag Light","X00273VOXD-F":"White RG HBD Theme","X001OPE17B-F":"Brown Peach White V cut Banner","9861821005435-Z":"4 Ft Christmas Tree","X0029P0QZB-F":"Burgundy and Navy blue Bday Theme","X001W3DQPN-F":"Green Galaxy","X002IX9Y9X-F":"Butterfly Unicorn Bday theme","X001PGPR1N-F":"Blue White Multipurpose","X0026P9O7P-I":"Neon Cap pack of 5","X001XHVLD7-I":"Yellow Bday Cap Pack of 10","X001Y8SABV-I":"Purple Rabbit Cap set of 10","X0026GSETX-I":"HBD Golden GLass","9861814255168-Z":"6 Ft Pine tree Christmas","9861872744970-Z":"5ft christmas tree","9861861951624-Z":"7 ft CHristmas Tree","9861814031670-Z":"3 Ft Pine Tree Christmas","9861831246125-Z":"Santa Sleigh Foil Balloons","9861823146266-Z":"Golden Bell With Red Bow Hanging","9861831168199":"Go Gear Small Car Holder","X0026GYNM5-I":"Princess Goggles","9861854266346-Z":"Witch Cauldron foil balloon","9861873383888-Z":"Snowman Face Balloons","X001WUNHVT-F":"Green Orange Gel","9861833694207":"Animal Caketopper","9861811912880-Z":"Christmas Candy Cane Hanging 6 Pcs","X0021E4HLT-I":"Yellow Red & Green hALDI cHAKRA","X002NWBCV-I":"2 Galaxy 4 Chakra without Light","X001TJFK2R-I":"Orange Marigold Set of 5","9861829705382-Z":"Nativity Set for Christmas","9861829394746-Z":"Spiral Christmas Cap","9861840632896-Z":"Santa Face Glass","9861836596614-Z":"Adult Furry Cap","9861842694991-Z":"Pack of 1 Santa Face Headband","9861898530823-Z":"Pack of 6 Silver Ball","9861856202014-Z":"Silver Christmas Banner","9861893585026-Z":"2 ft Christmas tree","9861858933978-Z":"Red Gitter Reindeer Headband","9861853117533-Z":"1 ft Christmas tree","X002D8OYW5":"lavender chiffon curtains","9861898885985":"Shiva Murti 3 Inches","X001JPEF6X":"Pack of 2 Yellow Net Backdrop Curtain","9861867293278-Z":"Christmas Tree Decor Ornament","9861832283860-Z":"Merry Christmas Hanging 1 Pcs","X0021DI79X":"green kalash toran set of 1","9861826037684-Z":"I Love India Wrist Band-5","9861819780894-Z":"i Love India Forehead Band-6","9861805905669-Z":"Bangles Set- 2","9861871075303-Z":"Patriotic Badges For Republic day-6","9861804900528-Z":"White Ribbon Badge-2","SKU2-Z":"Tricolor Hanging","SKU3-Z":"Bharat Wrist Band","SKU4-Z":"Tricolor Hair Clip -6","X001UKP8V3":"Two Yellow Net Money Palm","X0026337TD":"Rosegold Chrome pack of 50","SPYOFSTDC104344300":"Valentine Decor With Heart Foil Balloon","X0022YCPGR-F":"Football Sliver Chrome with Pump","X001L1D52Z-F":"Blue Star Bunting","X002BFT1EV-F":"5 Pastel Butterfly With Net Light","X002BY25NB-F":"Animal Foil Jungle Backdrop Theme","X00273R0BN-F":"White RG Bride to be","X001H8B5S3-F":"Black Gold","SPYOFSTDC105281607-M":"Pink Theme Valentine Day Backdrop Decor","SPYOFSTDC96343964-M":"Red & Pink Balloon Valentine Day","SPYOFSTDC91164772":"Red And White Balloon Valentine","SPYOFSTDC91164398":"Heart Balloons For Valentine Day","9861820722500":"Hamper For Valentine Sipper Pendant Box Miniature","9861878345263":"Gift Hamper With Mug Teddy Candle Flower Bouquet","9861812126767":"Hamper Mug KeyCard","SPYOFSTDC105281937":"Red Love & Heart Balloons For Valentine Day","SPYOHGST124110583":"Heart Shape Box Valentine Gift","9861885230545":"Hamper For Couples with Mugs teddy Candle Love Cards","SPYOFSTDC104341306":"mINAture for Home Decor For Valentine Gift","9861843348848":"Artificial Red Rose For Valentine Day","9861813833848":"Mug Jewelry Box Minature Candle Bouquet","9861801221992":"Artificial Gold Rose For Valentine Day","SPYOFSTDC96343956":"Wooden Photo Clips","SPYOHGST124110586":"Teddy Bear Minature","SPYOFSTDC88357216":"Red and Pink Heart Frill For Valentine Day Decor","SPYOFSTDC90579776":"Pink Heart Frill For Valentine Day","SPYOWDNS123961411":"Red Heart Wall Stickers","SPYOFSTDC91165148":"Valentine Day Decor with 3D Paper Red Heart","SPYOWDNS123961410":"Romantic Wall Sticker","SPYOHGST124110584":"SY Love Message Box Gift","SPYOFSTDC94494728":"loverose vines","SPYOFSTDC105281607":"sy-ivorypink-79","SPYOFSTDC94259938":"Heart Foil Balloons","SKU19":"Self Adhesive Wooden Wallpaper","X001WPXNQX-F":"Orange yellow Glaxy and Light 9 pcs","X0026ICHSF-I":"RG BTB FOil balloon","X0027W1LGT-Z":"Valentine Decor With be Backdrop","X00261LBYN-I":"Metallic RG chrome","REDRI":"Red Ribbon","X001WDIP31-F":"Yellow Galxy pack of 2","X002898M95-F":"Pink RG Chrome HBD","SKU5-F":"GL4","SKU13":"Avenger Theme","SKU14":"Metallic Pink Golden Fringe Silver Star Foil","X002061EX7-F":"Rosepink RG Confetti","X0020LGCH5-F":"Naming Cermony","X002A93J91-F":"Multicolor Pastel HBD Net","X00206CXT1-F":"Black RG Chrome HBD","X0022YHK5X-F":"Pastel Red 1/2 Bday with Pump","X002308UPZ-F":"PR BTR with Pump","X001DINDX7-F":"Pink Purple","SPYOFSTDC104341304":"Purpose Minature For Valentine Gift","SPYOFSTDC104341291":"Blue Moon Minuture For Valentine Gift","9861825709001":"Pink Bow Heart Mug For Valentine Day Gift","X00201SE21":"Pink Canopy Tent Love Balloon Decor","SPYOFSTDC104344311":"Romantic red Balloon & Heart Sticker","SPYOFSTDC105281975":"Valentine Decor Items with red and white balloon","SPYOHGST124110521":"Valentine Gift Hamper With Mug keychain and Love Card","9861812252398":"Pink Bow Mug For Valentine Day Gift","9861858943236":"Red Metal Rose with Teddy For Valentine Day","9861844715250":"Metal Row Love Card Jewelry Box Pendant Box","SPYOFSTDC105281916":"Love Canopy Tent Valentine Day Decor","SPYOHGST124110577":"Artificial Red Rose With Teddy","X00254ZK43-f":"Lotus Stickter pack of 10","X002BP5203-F":"Multicolor Butterfly Backdrop","X22233SGJ7-I":"Bohofy room deecor poster 6 pcs","SKU21-M":"Pink and Purple Love Valentine Decor","SKU18":"REtro Red Balloon","SPYOFSTDC104344307":"Valentine Decor With be Backdrop","X0027WB92F-M":"You Complete me Poster"};
+let masterSheet = JSON.parse(localStorage.getItem('sy_master') || 'null') || BUILTIN_MASTER;
+let entries     = JSON.parse(localStorage.getItem('sy_entries') || '[]');
+let pending     = JSON.parse(localStorage.getItem('sy_pending') || '[]');
+let scriptUrl   = localStorage.getItem('sy_script_url') || '';
+let selPlatform = null, selSuffix = '', selTxnVal = null;
+let codeReader = null, scanStream = null, scanning = false;
+
+// ======== INIT ========
+document.addEventListener('DOMContentLoaded', () => {
+  const today = new Date();
+  document.getElementById('entryDate').value = today.toISOString().split('T')[0];
+  document.getElementById('headerDate').textContent = today.toLocaleDateString('en-IN',{day:'2-digit',month:'short'});
+  document.getElementById('eanCode').addEventListener('input', onEanInput);
+  document.getElementById('qtyInput').addEventListener('change', () => {
+    let v = parseInt(document.getElementById('qtyInput').value);
+    if(!v||v<1) document.getElementById('qtyInput').value=1;
+  });
+  if(scriptUrl) {
+    document.getElementById('scriptUrl').value = scriptUrl;
+    updateSyncBadge('connected');
+  }
+  renderEntries(); updateStats(); updatePendingBanner();
+});
+
+// ======== PLATFORM ========
+function selPlat(btn) {
+  document.querySelectorAll('.platform-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  selPlatform = btn.dataset.p;
+  selSuffix   = btn.dataset.s;
+  updateFinalEan();
+}
+
+// ======== TXN ========
+function selTxn(type) {
+  selTxnVal = type;
+  document.getElementById('btnIn').classList.toggle('selected', type==='In');
+  document.getElementById('btnOut').classList.toggle('selected', type==='Out');
+}
+
+
+// ======== EAN / SKU ========
+function onEanInput() {
+  updateFinalEan();
+  const ean = document.getElementById('eanCode').value.trim();
+  if(!ean){ setSkuDisplay('empty','EAN enter karo SKU auto-fill hoga...'); return; }
+  if(masterSheet[ean]) setSkuDisplay('found', masterSheet[ean]);
+  else setSkuDisplay('not-found','⚠️ SKU Master Sheet mein nahi hai');
+}
+function updateFinalEan() {
+  const ean = document.getElementById('eanCode').value.trim();
+  document.getElementById('finalEan').value = (ean && selSuffix) ? ean+selSuffix : ean;
+}
+function setSkuDisplay(state, text) {
+  const el = document.getElementById('skuDisplay');
+  el.className = 'sku-display'+(state==='empty'?' empty':state==='not-found'?' not-found':'');
+  el.textContent = text;
+}
+
+// ======== QTY ========
+function chQty(d) {
+  const inp = document.getElementById('qtyInput');
+  inp.value = Math.max(1, Math.min(9999,(parseInt(inp.value)||1)+d));
+}
+
+// ======== SUBMIT ========
+async function submitEntry() {
+  const date    = document.getElementById('entryDate').value;
+  const ean     = document.getElementById('eanCode').value.trim();
+  const finalEan= document.getElementById('finalEan').value.trim();
+  const qty     = parseInt(document.getElementById('qtyInput').value)||0;
+  const skuName = masterSheet[ean]||'';
+
+  if(!date)        { showToast('📅 Date select karo!','error'); return; }
+  if(!ean)         { showToast('🔢 EAN Code enter karo!','error'); return; }
+  if(!selPlatform) { showToast('🏪 Platform select karo!','error'); return; }
+  if(!selTxnVal)   { showToast('↕️ Transaction Type select karo!','error'); return; }
+  if(!qty)         { showToast('📊 Valid Qty enter karo!','error'); return; }
+
+  const entry = {
+    id: Date.now(), date, ean,
+    platform: selPlatform, finalEan,
+    skuName: skuName||'(Unknown SKU)',
+    txn: selTxnVal, qty
+  };
+
+  // INSTANT: Save locally + reset form immediately
+  entries.unshift(entry);
+  localStorage.setItem('sy_entries', JSON.stringify(entries));
+  updateStats(); renderEntries();
+  resetForm();
+  showToast('✅ Entry save ho gayi!', 'success');
+
+  // Background mein sheet push (no await - non-blocking)
+  pushToSheet(entry);
+}
+
+function resetForm() {
+  document.getElementById('eanCode').value = '';
+  document.getElementById('finalEan').value = '';
+  document.getElementById('qtyInput').value = 1;
+  setSkuDisplay('empty','EAN enter karo SKU auto-fill hoga...');
+  document.querySelectorAll('.platform-btn').forEach(b=>b.classList.remove('selected'));
+  document.getElementById('btnIn').classList.remove('selected');
+  document.getElementById('btnOut').classList.remove('selected');
+  selPlatform=null; selSuffix=''; selTxnVal=null;
+}
+
+// ======== GOOGLE SHEETS PUSH (Background) ========
+async function pushToSheet(entry) {
+  if(!scriptUrl) {
+    addToPending(entry);
+    return;
+  }
+  addToPending(entry); // add to pending first, remove on success
+  try {
+    const res = await fetch(scriptUrl, {
+      method: 'POST',
+      headers: {'Content-Type':'text/plain'},
+      body: JSON.stringify({ action: 'appendRow', row: entry })
+    });
+    const data = await res.json();
+    if(data.success) {
+      // Remove from pending, mark synced
+      pending = pending.filter(p => p.id !== entry.id);
+      localStorage.setItem('sy_pending', JSON.stringify(pending));
+      entries = entries.map(e => e.id===entry.id ? {...e, synced:true, rowNum:data.rowNumber} : e);
+      localStorage.setItem('sy_entries', JSON.stringify(entries));
+      updatePendingBanner();
+      renderEntries();
+    }
+  } catch(err) {
+    // Already in pending, will sync later
+    console.error('pushToSheet error:', err);
+    updatePendingBanner();
+  }
+}
+
+function setSyncStatus(msg, color) {
+  const el = document.getElementById('syncStatusRow');
+  el.textContent = msg;
+  el.style.color = color;
+}
+
+function addToPending(entry) {
+  if(!pending.find(p=>p.id===entry.id)) {
+    pending.push(entry);
+    localStorage.setItem('sy_pending', JSON.stringify(pending));
+  }
+  updatePendingBanner();
+}
+
+function updatePendingBanner() {
+  const banner = document.getElementById('pendingBanner');
+  document.getElementById('pendingCount').textContent = pending.length;
+  if(pending.length > 0) banner.classList.add('show');
+  else banner.classList.remove('show');
+}
+
+async function syncPending() {
+  if(!scriptUrl) { showToast('Pehle Script URL save karo!','error'); return; }
+  if(!pending.length) { showToast('Koi pending entry nahi!',''); return; }
+
+  showToast(`🔄 ${pending.length} entries sync ho rahi hain...`, 'info');
+  const toSync = [...pending];
+  try {
+    // BATCH: Sab ek saath bhejo — ek hi request!
+    const res = await fetch(scriptUrl, {
+      method: 'POST',
+      headers: {'Content-Type':'text/plain'},
+      body: JSON.stringify({ action: 'appendBatch', rows: toSync })
+    });
+    const data = await res.json();
+    if(data.success) {
+      pending = [];
+      localStorage.setItem('sy_pending', JSON.stringify(pending));
+      // Mark all as synced
+      const syncedIds = new Set(toSync.map(e=>e.id));
+      entries = entries.map(e => syncedIds.has(e.id) ? {...e, synced:true} : e);
+      localStorage.setItem('sy_entries', JSON.stringify(entries));
+      updatePendingBanner(); renderEntries();
+      showToast(`✅ ${toSync.length} entries synced!`, 'success');
+    } else {
+      throw new Error(data.error);
+    }
+  } catch(e) {
+    showToast(`❌ Sync failed: ${e.message || e}`, 'error');
+    console.error('Sync error:', e);
+  }
+}
+
+// ======== GOOGLE SHEET SETTINGS ========
+function saveScriptUrl() {
+  const url = document.getElementById('scriptUrl').value.trim();
+  if(!url || !url.includes('script.google.com')) {
+    showToast('❌ Valid Apps Script URL daalo!','error'); return;
+  }
+  scriptUrl = url;
+  localStorage.setItem('sy_script_url', url);
+  updateSyncBadge('connected');
+  showToast('✅ URL save ho gaya!','success');
+  updatePendingBanner();
+}
+
+async function testConnection() {
+  const url = document.getElementById('scriptUrl').value.trim();
+  if(!url){ showToast('Pehle URL daalo!','error'); return; }
+
+  const statusEl = document.getElementById('connStatus');
+  statusEl.className='conn-status testing';
+  statusEl.textContent = '🔄 Testing connection...';
+
+  try {
+    const res = await fetch(url + '?action=getLastEntry');
+    const data = await res.json();
+
+    if(data.success) {
+      statusEl.className='conn-status ok';
+      statusEl.textContent = '✅ Connected! Sheet se data mil gaya.';
+      updateSyncBadge('connected');
+
+      if(data.lastEntry) {
+        const le = data.lastEntry;
+        document.getElementById('lastEntryBox').style.display='block';
+        document.getElementById('lastEntryVal').innerHTML =
+          `<b>Row ${data.lastRowNum}:</b> ${le.date} | ${le.ean} | ${le.platform} | ${le.skuName} | ${le.txn} | Qty: ${le.qty}`;
+      } else {
+        document.getElementById('lastEntryBox').style.display='block';
+        document.getElementById('lastEntryVal').textContent = 'Sheet mein abhi koi data nahi.';
+      }
+    } else {
+      throw new Error(data.error);
+    }
+  } catch(err) {
+    statusEl.className='conn-status fail';
+    statusEl.textContent = '❌ Connection failed: ' + err.message;
+    updateSyncBadge('disconnected');
+  }
+}
+
+async function cleanBlankRows() {
+  if(!scriptUrl){ showToast('Pehle Script URL save karo!','error'); return; }
+  if(!confirm('Sheet se saari blank rows delete karo?')) return;
+  showToast('🧹 Cleaning...','info');
+  try {
+    const res = await fetch(scriptUrl + '?action=cleanBlankRows');
+    const data = await res.json();
+    if(data.success) showToast('✅ ' + data.message, 'success');
+    else showToast('❌ ' + data.error, 'error');
+  } catch(e) {
+    showToast('❌ Connection error', 'error');
+  }
+}
+
+function updateSyncBadge(state) {
+  const badge = document.getElementById('syncBadge');
+  if(state==='connected') { badge.className='sync-badge connected'; badge.textContent='⬤ Connected'; }
+  else if(state==='syncing') { badge.className='sync-badge syncing'; badge.textContent='⬤ Syncing...'; }
+  else { badge.className='sync-badge disconnected'; badge.textContent='⬤ Not Connected'; }
+}
+
+// ======== ENTRIES RENDER ========
+const platColors = {
+  'Swiggy/Instamart':{bg:'#fde8e8',color:'#c62828'},
+  'FBA':{bg:'#e3f2fd',color:'#1565c0'},
+  'Zepto':{bg:'#e8f5e9',color:'#2e7d32'},
+  'Myntra':{bg:'#fffde7',color:'#f57f17'},
+  'FBF':{bg:'#e3f2fd',color:'#0277bd'},
+  'Blinkit':{bg:'#f3e5f5',color:'#6a1b9a'},
+  'GoGear':{bg:'#fbe9e7',color:'#bf360c'},
+};
+
+function renderEntries() {
+  const c = document.getElementById('entriesList');
+  document.getElementById('entriesCount').textContent = entries.length;
+  if(!entries.length){ c.innerHTML='<div class="empty-state"><div class="empty-icon">📭</div><p>Abhi koi entry nahi</p></div>'; return; }
+
+  // Show only latest 50 for speed — export CSV se sab milenge
+  const toShow = entries.slice(0, 50);
+  const extra = entries.length - toShow.length;
+
+  c.innerHTML = toShow.map(e => {
+    const pc = platColors[e.platform]||{bg:'#eee',color:'#555'};
+    const syncIcon = e.synced
+      ? `<span><span class="sync-dot ok"></span>${e.rowNum ? "Row " + e.rowNum : "Synced ✓"}</span>`
+      : `<span><span class="sync-dot pending"></span>Pending</span>`;
+    return `<div class="entry-card">
+      <button class="del-entry" onclick="deleteEntry(${e.id})">✕</button>
+      <div class="entry-row1">
+        <div class="entry-sku">${e.skuName}</div>
+        <div class="entry-qty ${e.txn.toLowerCase()}">${e.txn==='In'?'+':'−'}${e.qty}</div>
+      </div>
+      <div class="entry-row2">
+        <span class="plat-chip" style="background:${pc.bg};color:${pc.color}">${e.platform}</span>
+        <span class="txn-chip ${e.txn.toLowerCase()}">${e.txn}</span>
+        <span class="entry-ean">${e.ean}</span>
+        <span class="entry-final-ean">${e.finalEan}</span>
+        <span style="font-size:10px;color:var(--text3);margin-left:auto;">${syncIcon}</span>
+      </div>
+    </div>`;
+  }).join('') + (extra > 0 ? `<div style="text-align:center;padding:14px;font-size:12px;color:var(--text3);">📥 Purani ${extra} entries CSV export mein hain</div>` : '');
+}
+
+function deleteEntry(id) {
+  entries = entries.filter(e=>e.id!==id);
+  pending = pending.filter(e=>e.id!==id);
+  localStorage.setItem('sy_entries', JSON.stringify(entries));
+  localStorage.setItem('sy_pending', JSON.stringify(pending));
+  updateStats(); renderEntries(); updatePendingBanner();
+  showToast('🗑️ Entry delete ho gayi','');
+}
+
+function confirmClear() {
+  if(!entries.length){ showToast('Koi entry nahi!',''); return; }
+  if(confirm(`Kya aap ${entries.length} saari entries delete karna chahte hain?`)){
+    entries=[]; pending=[];
+    localStorage.setItem('sy_entries','[]');
+    localStorage.setItem('sy_pending','[]');
+    updateStats(); renderEntries(); updatePendingBanner();
+    showToast('🗑️ Saari entries clear!','');
+  }
+}
+
+function updateStats() {
+  const today = new Date().toISOString().split('T')[0];
+  const t = entries.filter(e=>e.date===today);
+  document.getElementById('statTotal').textContent = t.length;
+  document.getElementById('statIn').textContent = t.filter(e=>e.txn==='In').length;
+  document.getElementById('statOut').textContent = t.filter(e=>e.txn==='Out').length;
+}
+
+function exportCSV() {
+  if(!entries.length){ showToast('Koi entry nahi!','error'); return; }
+  const hdr=['Date','EAN Code','Platform','Final EAN Code','SKU Name','Transaction Type','Qty'];
+  const rows=entries.map(e=>[e.date,e.ean,e.platform,e.finalEan,`"${e.skuName}"`,e.txn,e.qty]);
+  const csv=[hdr,...rows].map(r=>r.join(',')).join('\n');
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  a.download=`FG_Inventory_${new Date().toISOString().split('T')[0]}.csv`;
+  a.click();
+  showToast('📥 CSV download ho raha hai!','success');
+}
+
+// ======== MASTER SHEET ========
+let masterFilter = '';
+function renderMasterRows() {
+  const c = document.getElementById('masterRows');
+  const allItems = Object.entries(masterSheet);
+  if(!allItems.length){ c.innerHTML=''; addMasterRow(); return; }
+
+  // Filter based on search
+  const q = masterFilter.toLowerCase();
+  const filtered = q
+    ? allItems.filter(([ean,sku]) => ean.toLowerCase().includes(q) || sku.toLowerCase().includes(q))
+    : allItems;
+
+  // Show only first 30 results (virtual list - no need to render 600+ nodes)
+  const toShow = filtered.slice(0, 30);
+  const extra = filtered.length - toShow.length;
+
+  c.innerHTML = toShow.map(([ean,sku])=>`
+    <div class="master-row-wrap">
+      <button class="del-master" onclick="this.closest('.master-row-wrap').remove()">
+        <span>🗑️ Delete</span><span>✕</span>
+      </button>
+      <div class="master-row">
+        <div class="m-ean-wrap">
+          <span class="m-ean-label">📦 EAN Code</span>
+          <input type="text" placeholder="EAN Code" value="${ean}" class="m-ean"/>
+        </div>
+        <div>
+          <span class="m-sku-label">🏷️ SKU Name</span>
+          <input type="text" placeholder="SKU Name" value="${sku}" class="m-sku"/>
+        </div>
+      </div>
+    </div>`).join('') +
+    (extra > 0 ? `<div style="text-align:center;padding:10px;font-size:12px;color:var(--text3);">+ ${extra} aur hain — search karo dekhne ke liye</div>` : '');
+}
+function addMasterRow(prefillEan='') {
+  const d=document.createElement('div'); d.className='master-row-wrap';
+  d.innerHTML=`
+    <button class="del-master" onclick="this.closest('.master-row-wrap').remove()">
+      <span>🗑️ Delete</span><span>✕</span>
+    </button>
+    <div class="master-row">
+      <div class="m-ean-wrap">
+        <span class="m-ean-label">📦 EAN Code</span>
+        <div style="position:relative;">
+          <input type="text" placeholder="EAN Code scan karo ya type karo" class="m-ean" value="${prefillEan}" style="width:100%;box-sizing:border-box;padding-right:44px;"/>
+          <button onclick="scanMasterEan(this.previousElementSibling)" style="position:absolute;right:6px;top:50%;transform:translateY(-50%);background:none;border:none;font-size:20px;cursor:pointer;padding:2px;">📷</button>
+        </div>
+      </div>
+      <div>
+        <span class="m-sku-label">🏷️ SKU Name</span>
+        <input type="text" placeholder="SKU Name likho" class="m-sku"/>
+      </div>
+    </div>`;
+  document.getElementById('masterRows').prepend(d);
+  if(prefillEan) d.querySelector('.m-sku').focus();
+}
+
+function scanMasterEan(inputEl) {
+  // inputEl is now passed directly
+  activeMasterEanInput = inputEl;
+  openScanner();
+}
+let activeMasterEanInput = null;
+function saveMasterSheet() {
+  // Read only the visible (rendered) rows and merge into full masterSheet
+  const eans=document.querySelectorAll('.m-ean'), skus=document.querySelectorAll('.m-sku');
+  eans.forEach((el,i)=>{ const e=el.value.trim(),s=skus[i]?.value.trim(); if(e&&s) masterSheet[e]=s; });
+  localStorage.setItem('sy_master',JSON.stringify(masterSheet));
+  masterFilter='';
+  document.querySelector('input[placeholder*="EAN ya SKU"]').value='';
+  renderMasterRows();
+  showToast(`✅ ${Object.keys(masterSheet).length} SKUs save ho gaye!`,'success');
+}
+
+// ======== NAVIGATION ========
+function switchPage(page) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById(`page-${page}`).classList.add('active');
+  document.getElementById(`nav-${page}`).classList.add('active');
+  if(page==='entries') renderEntries();
+  if(page==='search') initSkuSearch();
+  if(page==='settings') renderMasterRows();
+}
+
+// ======== SCANNER ========
+async function openScanner() {
+  document.getElementById('scannerOverlay').classList.add('open');
+  document.getElementById('scanResult').style.display='none';
+  scanning=true;
+  try {
+    if(window.ZXing) {
+      const hints=new Map();
+      hints.set(ZXing.DecodeHintType.POSSIBLE_FORMATS,[
+        ZXing.BarcodeFormat.EAN_13, ZXing.BarcodeFormat.EAN_8,
+        ZXing.BarcodeFormat.CODE_128, ZXing.BarcodeFormat.CODE_39,
+        ZXing.BarcodeFormat.UPC_A, ZXing.BarcodeFormat.UPC_E,
+      ]);
+      hints.set(ZXing.DecodeHintType.TRY_HARDER, true);
+      codeReader = new ZXing.BrowserMultiFormatReader(hints);
+      const devices = await ZXing.BrowserCodeReader.listVideoInputDevices();
+      const backCam = devices.find(d=>/back|rear|environment/i.test(d.label))||devices[devices.length-1];
+      await codeReader.decodeFromVideoDevice(backCam?.deviceId, 'scannerVideo', (result,err) => {
+        if(!scanning) return;
+        if(result) onBarcodeDetected(result.getText());
+      });
+    } else { await startNativeScanner(); }
+  } catch(e) { await startNativeScanner(); }
+}
+
+async function startNativeScanner() {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});
+    scanStream=stream;
+    const video=document.getElementById('scannerVideo');
+    video.srcObject=stream; await video.play();
+    if('BarcodeDetector' in window) {
+      const det=new BarcodeDetector({formats:['ean_13','ean_8','code_128','code_39','upc_a','upc_e']});
+      const loop=async()=>{ if(!scanning)return; try{ const bc=await det.detect(video); if(bc.length>0){onBarcodeDetected(bc[0].rawValue);return;} }catch(e){} requestAnimationFrame(loop); };
+      requestAnimationFrame(loop);
+    } else { showToast('❌ Camera scan support nahi hai','error'); setTimeout(closeScanner,1500); }
+  } catch(e) { showToast('❌ Camera permission do!','error'); setTimeout(closeScanner,1500); }
+}
+
+function onBarcodeDetected(code) {
+  if(!scanning) return; scanning=false;
+  const r=document.getElementById('scanResult');
+  r.textContent='✅ Scanned: '+code; r.style.display='block';
+  if(navigator.vibrate) navigator.vibrate([100,50,100]);
+  setTimeout(()=>{
+    closeScanner();
+    if(activeMasterEanInput) {
+      activeMasterEanInput.value=code;
+      activeMasterEanInput.closest('.master-row-wrap').querySelector('.m-sku').focus();
+      activeMasterEanInput=null;
+      showToast('✅ EAN scan ho gaya!','success');
+    } else {
+      document.getElementById('eanCode').value=code;
+      document.getElementById('eanCode').dispatchEvent(new Event('input'));
+      showToast('✅ Barcode scan ho gaya!','success');
+    }
+  }, 700);
+}
+
+function closeScanner() {
+  scanning=false;
+  document.getElementById('scannerOverlay').classList.remove('open');
+  if(codeReader){ try{codeReader.reset();}catch(e){} codeReader=null; }
+  if(scanStream){ scanStream.getTracks().forEach(t=>t.stop()); scanStream=null; }
+  document.getElementById('scannerVideo').srcObject=null;
+}
+
+// ======== SKU SEARCH ========
+let searchTimer = null;
+
+function initSkuSearch() {
+  const url = localStorage.getItem('sy_script_url');
+  if(!url) {
+    document.getElementById('skuResults').innerHTML = '<div class="search-empty">⚠️ Pehle Settings mein Google Sheet URL save karo</div>';
+  } else {
+    document.getElementById('skuResults').innerHTML = '<div class="search-empty">🔍 SKU Code ya Name type karo</div>';
+  }
+}
+
+function onSkuSearch(q) {
+  clearTimeout(searchTimer);
+  q = q.trim();
+  if(!q) {
+    document.getElementById('skuResults').innerHTML = '<div class="search-empty">🔍 SKU Code ya Name type karo</div>';
+    document.getElementById('searchCount').textContent = '';
+    return;
+  }
+  // Search server pe — har keystroke pe 500ms baad
+  searchTimer = setTimeout(()=> fetchSkuSearch(q), 500);
+}
+
+async function fetchSkuSearch(q) {
+  const url = localStorage.getItem('sy_script_url');
+  if(!url) {
+    document.getElementById('skuResults').innerHTML = '<div class="search-empty">⚠️ Settings mein Sheet URL save karo pehle</div>';
+    return;
+  }
+  document.getElementById('skuResults').innerHTML = '<div class="search-empty">⏳ Search ho raha hai...</div>';
+  document.getElementById('searchCount').textContent = '';
+  try {
+    const res = await fetch(url + '?action=searchSku&q=' + encodeURIComponent(q));
+    const data = await res.json();
+    if(data.success) {
+      renderSkuResults(data.results, q);
+    } else {
+      document.getElementById('skuResults').innerHTML = '<div class="search-empty">❌ ' + (data.error||'Error aaya') + '</div>';
+    }
+  } catch(e) {
+    document.getElementById('skuResults').innerHTML = '<div class="search-empty">❌ Sheet connect nahi hai</div>';
+  }
+}
+
+function renderSkuResults(results, q) {
+  document.getElementById('searchCount').textContent = results.length + ' results mile';
+  if(results.length === 0) {
+    document.getElementById('skuResults').innerHTML = '<div class="search-empty">😕 "' + q + '" ke liye koi SKU nahi mila</div>';
+    return;
+  }
+  document.getElementById('skuResults').innerHTML = results.map(r => `
+    <div class="sku-card">
+      <div class="sku-card-name">${r.skuName || '—'}</div>
+      <div class="sku-card-code">📦 ${r.skuCode}</div>
+      <div class="sku-card-row">
+        <span class="sku-badge balance">✅ Stock: ${r.balance || '0'}</span>
+        ${r.location ? '<span class="sku-badge location">📍 ' + r.location + '</span>' : ''}
+      </div>
+    </div>
+  `).join('');
+}
+
+// ======== TOAST ========
+function showToast(msg, type) {
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.className=`toast ${type} show`;
+  setTimeout(()=>t.classList.remove('show'), 3000);
+}
+</script>
+</body>
+</html>
